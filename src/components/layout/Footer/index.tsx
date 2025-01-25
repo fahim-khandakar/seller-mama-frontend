@@ -121,7 +121,7 @@ const Footer = () => {
                     width={33}
                     height={100}
                     alt="user"
-                    className="max-h-[15px]"
+                    className="max-h-[15px] max-w-[25px]"
                   />
                 </span>
               ))}
