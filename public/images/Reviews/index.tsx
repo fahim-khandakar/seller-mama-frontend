@@ -3,7 +3,6 @@
 import React from "react";
 import * as motion from "framer-motion/client";
 import { cn } from "@/lib/utils";
-import { integralCF } from "@/styles/fonts";
 import {
   Carousel,
   CarouselContent,
@@ -12,10 +11,28 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
-import { useIsClient, useMediaQuery } from "usehooks-ts";
-import ReviewCard from "@/components/common/ReviewCard";
-import { Review } from "@/types/review.types";
+import { Review } from "@/shared/config/constants";
+import ReviewCard from "@/modules/Home/partials/Reviews Card/ReviewCard";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+
+// Custom hook for media query
+const useMediaQueryCustom = (query: string) => {
+  const [matches, setMatches] = React.useState(false);
+
+  React.useEffect(() => {
+    const mediaQuery = window.matchMedia(query);
+    const updateMatches = () => setMatches(mediaQuery.matches);
+
+    updateMatches(); // Initial check
+    mediaQuery.addEventListener("change", updateMatches);
+
+    return () => {
+      mediaQuery.removeEventListener("change", updateMatches);
+    };
+  }, [query]);
+
+  return matches;
+};
 
 type ReviewsProps = { data: Review[] };
 
@@ -23,8 +40,14 @@ const Reviews = ({ data }: ReviewsProps) => {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
-  const isDesktop = useMediaQuery("(min-width: 1024px)");
-  const isClient = useIsClient();
+
+  // Replacing `useMediaQuery` and `useIsClient`
+  const isDesktop = useMediaQueryCustom("(min-width: 1024px)");
+  const [isClient, setIsClient] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   React.useEffect(() => {
     if (!api) {
@@ -57,14 +80,13 @@ const Reviews = ({ data }: ReviewsProps) => {
           }}
           className="relative w-full mb-6 md:mb-9"
         >
-          <div className="relative flex items-end sm:items-center max-w-frame mx-auto mb-6 md:mb-10 px-4 xl:px-0">
+          <div className="relative flex items-end sm:items-center max-w-7xl mx-auto mb-6 md:mb-10 px-4 xl:px-0">
             <motion.h2
               initial={{ y: "100px", opacity: 0 }}
               whileInView={{ y: "0", opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.6, duration: 0.6 }}
               className={cn([
-                integralCF.className,
                 "text-[32px] leading-[36px] md:text-5xl capitalize mr-auto",
               ])}
             >
@@ -72,10 +94,10 @@ const Reviews = ({ data }: ReviewsProps) => {
             </motion.h2>
             <div className="flex items-center space-x-1 ml-2">
               <CarouselPrevious variant="ghost" className="text-2xl">
-                <FaArrowLeft />
+                <ArrowLeft />
               </CarouselPrevious>
               <CarouselNext variant="ghost" className="text-2xl">
-                <FaArrowRight />
+                <ArrowRight />
               </CarouselNext>
             </div>
           </div>

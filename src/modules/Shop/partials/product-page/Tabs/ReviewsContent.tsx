@@ -7,9 +7,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import ReviewCard from "@/components/common/ReviewCard";
-import { reviewsData } from "@/app/page";
 import Link from "next/link";
+import { reviewsData } from "@/modules/Home/config/constants";
+import ReviewCard from "@/modules/Home/partials/Reviews Card/ReviewCard";
 
 const ReviewsContent = () => {
   return (
