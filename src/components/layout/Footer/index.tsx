@@ -1,34 +1,28 @@
 import { cn } from "@/lib/utils";
-import { integralCF } from "@/styles/fonts";
 import React from "react";
 import { PaymentBadge, SocialNetworks } from "./footer.types";
-import { FaFacebookF, FaGithub, FaInstagram, FaTwitter } from "react-icons/fa";
 import Link from "next/link";
 import LinksSection from "./LinksSection";
 import Image from "next/image";
 import NewsLetterSection from "./NewsLetterSection";
 import LayoutSpacing from "./LayoutSpacing";
+import { Facebook, Instagram, Twitter } from "lucide-react";
 
 const socialsData: SocialNetworks[] = [
   {
     id: 1,
-    icon: <FaTwitter />,
+    icon: <Twitter />,
     url: "https://twitter.com",
   },
   {
     id: 2,
-    icon: <FaFacebookF />,
+    icon: <Facebook />,
     url: "https://facebook.com",
   },
   {
     id: 3,
-    icon: <FaInstagram />,
+    icon: <Instagram />,
     url: "https://instagram.com",
-  },
-  {
-    id: 4,
-    icon: <FaGithub />,
-    url: "https://github.com/mohammadoftadeh",
   },
 ];
 
@@ -65,20 +59,21 @@ const Footer = () => {
         </div>
       </div>
       <div className="pt-8 md:pt-[50px] bg-[#F0F0F0] px-4 pb-4">
-        <div className="max-w-frame mx-auto">
+        <div className="max-w-7xl mx-auto">
           <nav className="lg:grid lg:grid-cols-12 mb-8">
             <div className="flex flex-col lg:col-span-3 lg:max-w-[248px]">
               <h1
                 className={cn([
-                  integralCF.className,
-                  "text-[28px] lg:text-[32px] mb-6",
+                  "text-[28px] lg:text-[32px] mb-6 font-extrabold",
                 ])}
               >
-                SHOP.CO
+                Seller Mama
               </h1>
               <p className="text-black/60 text-sm mb-9">
-                We have clothes that suits your style and which you’re proud to
-                wear. From women to men.
+                We offer a curated collection of clothing that perfectly matches
+                your unique style and ensures you feel confident. Whether
+                you&apos;re looking for men&apos;s or women&apos;s fashion, we
+                have something to elevate your wardrobe.
               </p>
               <div className="flex items-center">
                 {socialsData.map((social) => (
@@ -103,20 +98,12 @@ const Footer = () => {
           <hr className="h-[1px] border-t-black/10 mb-6" />
           <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center mb-2">
             <p className="text-sm text-center sm:text-left text-black/60 mb-4 sm:mb-0 sm:mr-1">
-              Shop.co © Made by{" "}
+              Seller Mama © Made by{" "}
               <Link
-                href="https://github.com/mohammadoftadeh"
+                href="https://github.com/fahim-khandakar"
                 className="text-black font-medium"
               >
-                Mohammad Oftadeh
-              </Link>
-              {", "}
-              Designed by{" "}
-              <Link
-                href="https://www.figma.com/@hamzauix"
-                className="text-black font-medium"
-              >
-                Hamza Naeem
+                Fahim Khandakar
               </Link>
             </p>
             <div className="flex items-center">

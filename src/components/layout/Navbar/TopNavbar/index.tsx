@@ -71,7 +71,7 @@ const data: NavMenu = [
 const TopNavbar = () => {
   return (
     <nav className="sticky top-0 bg-white z-20">
-      <div className="flex gap-5 relative max-w-5xl mx-auto items-center justify-between md:justify-start py-5 md:py-6 px-4 xl:px-0">
+      <div className="flex gap-5 relative max-w-7xl mx-auto items-center justify-between md:justify-start py-5 md:py-6 px-4 xl:px-0">
         <div className="flex items-center">
           <div className="block md:hidden mr-4">
             <ResTopNavbar data={data} />
