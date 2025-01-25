@@ -78,7 +78,9 @@ const TopNavbar = () => {
           </div>
           <Link
             href="/"
-            className={cn(["text-2xl  lg:text-[32px]   font-bold"])}
+            className={cn([
+              "text-2xl  lg:text-[32px]   font-extrabold whitespace-nowrap",
+            ])}
           >
             Seller Mama
           </Link>

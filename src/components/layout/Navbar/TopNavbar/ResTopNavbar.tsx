@@ -7,7 +7,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { NavMenu } from "../navbar.types";
@@ -17,19 +16,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { MenuIcon } from "lucide-react";
 
 const ResTopNavbar = ({ data }: { data: NavMenu }) => {
   return (
     <Sheet>
       <SheetTrigger asChild className="cursor-pointer">
-        <Image
-          priority
-          src="/icons/menu.svg"
-          height={100}
-          width={100}
-          alt="menu"
-          className="max-w-[22px] max-h-[22px]"
-        />
+        <MenuIcon />
       </SheetTrigger>
       <SheetContent side="left" className="overflow-y-auto">
         <SheetHeader className="mb-10">
