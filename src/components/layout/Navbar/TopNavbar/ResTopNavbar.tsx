@@ -10,7 +10,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { integralCF } from "@/styles/fonts";
 import { NavMenu } from "../navbar.types";
 import {
   Accordion,
@@ -36,7 +35,7 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
         <SheetHeader className="mb-10">
           <SheetTitle asChild>
             <SheetClose asChild>
-              <Link href="/" className={cn([integralCF.className, "text-2xl"])}>
+              <Link href="/" className={cn(["text-2xl"])}>
                 SHOP.CO
               </Link>
             </SheetClose>
@@ -60,7 +59,7 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
                         {item.label}
                       </AccordionTrigger>
                       <AccordionContent className="p-4 pb-0 border-l flex flex-col">
-                        {item.children.map((itemChild, idx) => (
+                        {item.children.map((itemChild) => (
                           <SheetClose
                             key={itemChild.id}
                             asChild

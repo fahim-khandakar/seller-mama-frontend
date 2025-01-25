@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { integralCF } from "@/styles/fonts";
 import Link from "next/link";
 import React from "react";
 import { NavMenu } from "../navbar.types";
@@ -9,10 +8,10 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { MenuItem } from "./MenuItem";
-import Image from "next/image";
 import InputGroup from "@/components/ui/input-group";
 import ResTopNavbar from "./ResTopNavbar";
 import CartBtn from "./CartBtn";
+import { Search, User } from "lucide-react";
 
 const data: NavMenu = [
   {
@@ -72,22 +71,19 @@ const data: NavMenu = [
 const TopNavbar = () => {
   return (
     <nav className="sticky top-0 bg-white z-20">
-      <div className="flex relative max-w-frame mx-auto items-center justify-between md:justify-start py-5 md:py-6 px-4 xl:px-0">
+      <div className="flex gap-5 relative max-w-5xl mx-auto items-center justify-between md:justify-start py-5 md:py-6 px-4 xl:px-0">
         <div className="flex items-center">
           <div className="block md:hidden mr-4">
             <ResTopNavbar data={data} />
           </div>
           <Link
             href="/"
-            className={cn([
-              integralCF.className,
-              "text-2xl lg:text-[32px] mb-2 mr-3 lg:mr-10",
-            ])}
+            className={cn(["text-2xl  lg:text-[32px]   font-bold"])}
           >
-            SHOP.CO
+            Seller Mama
           </Link>
         </div>
-        <NavigationMenu className="hidden md:flex mr-2 lg:mr-7">
+        <NavigationMenu className="hidden md:flex ">
           <NavigationMenuList>
             {data.map((item) => (
               <React.Fragment key={item.id}>
@@ -101,16 +97,9 @@ const TopNavbar = () => {
             ))}
           </NavigationMenuList>
         </NavigationMenu>
-        <InputGroup className="hidden md:flex bg-[#F0F0F0] mr-3 lg:mr-10">
+        <InputGroup className="hidden md:flex bg-[#F0F0F0] ">
           <InputGroup.Text>
-            <Image
-              priority
-              src="/icons/search.svg"
-              height={20}
-              width={20}
-              alt="search"
-              className="min-w-5 min-h-5"
-            />
+            <Search />
           </InputGroup.Text>
           <InputGroup.Input
             type="search"
@@ -120,26 +109,12 @@ const TopNavbar = () => {
           />
         </InputGroup>
         <div className="flex items-center">
-          <Link href="/search" className="block md:hidden mr-[14px] p-1">
-            <Image
-              priority
-              src="/icons/search-black.svg"
-              height={100}
-              width={100}
-              alt="search"
-              className="max-w-[22px] max-h-[22px]"
-            />
+          <Link href="/search" className="block md:hidden  p-1">
+            <Search />
           </Link>
           <CartBtn />
           <Link href="/#signin" className="p-1">
-            <Image
-              priority
-              src="/icons/user.svg"
-              height={100}
-              width={100}
-              alt="user"
-              className="max-w-[22px] max-h-[22px]"
-            />
+            <User />
           </Link>
         </div>
       </div>
