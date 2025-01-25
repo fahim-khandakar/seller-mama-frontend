@@ -1,7 +1,5 @@
 "use client";
 
-import { setSizeSelection } from "@/lib/features/products/productsSlice";
-
 import { cn } from "@/lib/utils";
 import React from "react";
 
