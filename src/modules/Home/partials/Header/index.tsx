@@ -31,6 +31,7 @@ const Header = () => {
             designed to bring out your individuality and cater to your sense of
             style.
           </motion.p>
+
           <motion.div
             initial={{ y: "100px", opacity: 0 }}
             whileInView={{ y: "0", opacity: 1 }}
@@ -44,6 +45,7 @@ const Header = () => {
               Shop Now
             </Link>
           </motion.div>
+
           <motion.div
             initial={{ y: "100px", opacity: 0 }}
             whileInView={{ y: "0", opacity: 1 }}
@@ -85,6 +87,7 @@ const Header = () => {
             </div>
           </motion.div>
         </section>
+
         <motion.section
           initial={{ y: "100px", opacity: 0, rotate: 10 }}
           whileInView={{ y: "0", opacity: 1, rotate: 0 }}
