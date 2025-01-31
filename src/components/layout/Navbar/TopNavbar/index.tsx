@@ -115,7 +115,7 @@ const TopNavbar = () => {
             <Search />
           </Link>
           <CartBtn />
-          <Link href="/#signin" className="p-1">
+          <Link href="/signin" className="p-1">
             <User />
           </Link>
         </div>

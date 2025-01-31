@@ -29,7 +29,7 @@ const ResTopNavbar = ({ data }: { data: NavMenu }) => {
           <SheetTitle asChild>
             <SheetClose asChild>
               <Link href="/" className={cn(["text-2xl"])}>
-                SHOP.CO
+                Seller Mama
               </Link>
             </SheetClose>
           </SheetTitle>
