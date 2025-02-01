@@ -5,9 +5,9 @@ import InputGroup from "@/components/ui/input-group";
 import { cn } from "@/lib/utils";
 import { useState } from "react"; // Import useState for form state management
 import { useCreateUserMutation } from "@/redux/features/users";
-import Button from "@/components/common/Button/Button";
 import { showToast } from "@/shared/helpers/showToast";
 import { useRouter } from "next/navigation";
+import CustomButton from "@/components/common/Button/Button";
 
 const SignUp = () => {
   const router = useRouter();
@@ -161,9 +161,9 @@ const SignUp = () => {
           </button>
         </InputGroup>
 
-        <Button loading={isLoading} type="submit" className="w-full">
+        <CustomButton loading={isLoading} type="submit" className="w-full">
           Sign Up
-        </Button>
+        </CustomButton>
       </form>
     </div>
   );

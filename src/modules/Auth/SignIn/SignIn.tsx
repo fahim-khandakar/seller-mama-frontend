@@ -1,23 +1,41 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Lock, Mail, Eye, EyeOff } from "lucide-react"; // Add Eye and EyeOff icons
 import InputGroup from "@/components/ui/input-group";
 import { cn } from "@/lib/utils";
 import Link from "next/link"; // Import the Link component from Next.js
 import { useState } from "react"; // Import useState for form state management
+import { useSignInMutation } from "@/redux/features/auth";
+import { showToast } from "@/shared/helpers/showToast";
+import { useRouter } from "next/navigation";
+import CustomButton from "@/components/common/Button/Button";
+import { setCookie } from "cookies-next";
+import { authKey } from "@/shared/config/constants";
 
 const SignIn = () => {
+  const router = useRouter();
   // State for form inputs
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [signIn, { isLoading }] = useSignInMutation();
 
   // Form submission handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log("Form submission", email, password);
+    const fullData = {
+      email,
+      password,
+    };
+
+    const result = await signIn({ fullData });
+    const isToastTrue = showToast(result);
+    if (isToastTrue) {
+      setCookie(authKey, result?.data?.data?.token);
+      router.push("/");
+    }
   };
 
   // Toggle password visibility
@@ -75,9 +93,9 @@ const SignIn = () => {
         </InputGroup>
 
         {/* Sign In Button */}
-        <Button type="submit" className="w-full">
+        <CustomButton loading={isLoading} type="submit" className="w-full">
           Sign In
-        </Button>
+        </CustomButton>
       </form>
 
       {/* Link to Sign Up page */}
