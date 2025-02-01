@@ -1,22 +1,4 @@
-export type Product = {
-  id: number;
-  title: string;
-  srcUrl: string;
-  gallery?: string[];
-  price: number;
-  discount: Discount;
-  rating: number;
-};
+// whenever wee need to change default className value we will use this
+export const authKey = "accessToken";
 
-export type Discount = {
-  amount: number;
-  percentage: number;
-};
-
-export type Review = {
-  id: number;
-  user: string;
-  content: string;
-  rating: number;
-  date: string;
-};
+export const emptyData = "No Data";

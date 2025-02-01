@@ -2,7 +2,7 @@ import baseApi from "../api/baseApi";
 
 const UsersApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    userCreate: builder.mutation({
+    createUser: builder.mutation({
       query: ({ fullData, token }) => {
         return {
           url: "/users",
@@ -82,7 +82,7 @@ const UsersApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useUserCreateMutation,
+  useCreateUserMutation,
   useGetUsersQuery,
   useGetSingleUserQuery,
   useUserEditMutation,

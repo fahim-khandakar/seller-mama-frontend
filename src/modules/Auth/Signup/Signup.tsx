@@ -1,12 +1,16 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Lock, Mail, Phone, User, Eye, EyeOff } from "lucide-react"; // Add Eye and EyeOff icons
 import InputGroup from "@/components/ui/input-group";
 import { cn } from "@/lib/utils";
 import { useState } from "react"; // Import useState for form state management
+import { useCreateUserMutation } from "@/redux/features/users";
+import Button from "@/components/common/Button/Button";
+import { showToast } from "@/shared/helpers/showToast";
+import { useRouter } from "next/navigation";
 
 const SignUp = () => {
+  const router = useRouter();
   // State for form inputs
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -18,6 +22,8 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const [createUser, { isLoading }] = useCreateUserMutation();
+
   // Form submission handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,14 +34,18 @@ const SignUp = () => {
       return;
     }
 
-    console.log(
-      "form submission",
+    const fullData = {
       email,
       phone,
       name,
       password,
-      confirmPassword
-    );
+    };
+
+    const result = await createUser({ fullData });
+    const isToastTrue = showToast(result);
+    if (isToastTrue) {
+      router.push("/signin");
+    }
   };
 
   // Toggle password visibility
@@ -151,7 +161,7 @@ const SignUp = () => {
           </button>
         </InputGroup>
 
-        <Button type="submit" className="w-full">
+        <Button loading={isLoading} type="submit" className="w-full">
           Sign Up
         </Button>
       </form>
