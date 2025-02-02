@@ -17,7 +17,7 @@ const recentOrders = [
   { id: "1237", customer: "Alice Brown", total: "$59.99", status: "Pending" },
 ];
 
-export default function DashboardPage() {
+export default function DashboardHome() {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

@@ -13,6 +13,15 @@ import InputGroup from "@/components/ui/input-group";
 import ResTopNavbar from "./ResTopNavbar";
 import CartBtn from "./CartBtn";
 import { Search, User } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+
 import { getFromCookie } from "@/shared/helpers/localStorage";
 import { authKey } from "@/shared/config/constants";
 import { useGetMeQuery } from "@/redux/features/auth";
@@ -126,7 +135,18 @@ const TopNavbar = () => {
             href={user?.data?.role === "ADMIN" ? "/dashboard" : "/signin"}
             className="p-1"
           >
-            <User />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <User className="!text-2xl" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuItem>Logout</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </Link>
         </div>
       </div>
