@@ -11,9 +11,9 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
-import { Review } from "@/shared/config/constants";
 import ReviewCard from "@/modules/Home/partials/Reviews Card/ReviewCard";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { Review } from "@/shared/config/types";
 
 // Custom hook for media query
 const useMediaQueryCustom = (query: string) => {

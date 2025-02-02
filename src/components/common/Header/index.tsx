@@ -6,7 +6,7 @@ import Rating from "@/components/ui/Rating";
 import ColorSelection from "./ColorSelection";
 import SizeSelection from "./SizeSelection";
 import AddToCardSection from "./AddToCardSection";
-import { Product } from "@/shared/config/constants";
+import { Product } from "@/shared/config/types";
 
 const Header = ({ data }: { data: Product }) => {
   return (

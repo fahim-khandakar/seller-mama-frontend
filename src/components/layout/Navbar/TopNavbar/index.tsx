@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
@@ -12,6 +13,9 @@ import InputGroup from "@/components/ui/input-group";
 import ResTopNavbar from "./ResTopNavbar";
 import CartBtn from "./CartBtn";
 import { Search, User } from "lucide-react";
+import { getFromCookie } from "@/shared/helpers/localStorage";
+import { authKey } from "@/shared/config/constants";
+import { useGetMeQuery } from "@/redux/features/auth";
 
 const data: NavMenu = [
   {
@@ -69,6 +73,9 @@ const data: NavMenu = [
 ];
 
 const TopNavbar = () => {
+  const token = getFromCookie(authKey);
+  const { data: user } = useGetMeQuery({ token });
+  console.log("data", user);
   return (
     <nav className="sticky top-0 bg-white z-20">
       <div className="flex gap-5 relative max-w-7xl mx-auto items-center justify-between md:justify-start py-5 md:py-6 px-4 xl:px-0">
@@ -115,7 +122,10 @@ const TopNavbar = () => {
             <Search />
           </Link>
           <CartBtn />
-          <Link href="/signin" className="p-1">
+          <Link
+            href={user?.data?.role === "ADMIN" ? "/dashboard" : "/signin"}
+            className="p-1"
+          >
             <User />
           </Link>
         </div>

@@ -15,7 +15,19 @@ const AuthApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["user"],
     }),
+
+    getMe: builder.query({
+      query: ({ token }) => {
+        return {
+          url: "/auth/me",
+          headers: {
+            authorization: token,
+          },
+        };
+      },
+      providesTags: ["user"],
+    }),
   }),
 });
 
-export const { useSignInMutation } = AuthApi;
+export const { useSignInMutation, useGetMeQuery } = AuthApi;

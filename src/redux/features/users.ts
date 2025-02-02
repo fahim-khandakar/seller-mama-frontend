@@ -54,17 +54,6 @@ const UsersApi = baseApi.injectEndpoints({
       invalidatesTags: ["user"],
     }),
 
-    userMyProfile: builder.query({
-      query: ({ token }) => {
-        return {
-          url: "/users/my-profile",
-          headers: {
-            authorization: token,
-          },
-        };
-      },
-      providesTags: ["user"],
-    }),
     userDelete: builder.mutation({
       query: ({ token, id, fullData }) => {
         return {
@@ -86,6 +75,5 @@ export const {
   useGetUsersQuery,
   useGetSingleUserQuery,
   useUserEditMutation,
-  useUserMyProfileQuery,
   useUserDeleteMutation,
 } = UsersApi;

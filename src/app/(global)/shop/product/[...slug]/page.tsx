@@ -7,7 +7,7 @@ import {
 import ProductCardList from "@/modules/Home/partials/ProductCardList/ProductCardList";
 import BreadcrumbProduct from "@/modules/Shop/partials/product-page/BreadcrumbProduct";
 import Tabs from "@/modules/Shop/partials/product-page/Tabs";
-import { Product } from "@/shared/config/constants";
+import { Product } from "@/shared/config/types";
 import { notFound } from "next/navigation";
 
 const data: Product[] = [
