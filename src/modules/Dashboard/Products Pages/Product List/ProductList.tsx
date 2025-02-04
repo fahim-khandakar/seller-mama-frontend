@@ -27,7 +27,11 @@ const ProductList = () => {
   return (
     <div>
       <div>
-        <CommonTable data={data} />
+        <CommonTable
+          topBtnLink="/dashboard/products/product-add"
+          topBtnValue="Add Product"
+          data={data}
+        />
       </div>
     </div>
   );
