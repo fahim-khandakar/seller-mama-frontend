@@ -10,6 +10,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 const navItems = [
   { icon: Home, label: "Dashboard", href: "/dashboard" },
@@ -29,13 +30,13 @@ export function DashboardSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.map((item) => (
+              {navItems?.map((item) => (
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton asChild>
-                    <a href={item.href}>
+                    <Link href={item.href}>
                       <item.icon className="mr-2 h-4 w-4" />
                       {item.label}
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

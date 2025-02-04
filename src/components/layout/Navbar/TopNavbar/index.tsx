@@ -142,6 +142,9 @@ const TopNavbar = () => {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <Link href={"/dashboard"}>
+                  <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                </Link>
                 <DropdownMenuItem>Profile</DropdownMenuItem>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuItem>Logout</DropdownMenuItem>

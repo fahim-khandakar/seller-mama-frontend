@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Azeret_Mono as Geist_Mono } from "next/font/google";
-import "../../globals.css";
+import "../(global)/globals.css";
 import Providers from "@/redux/Providers";
 import { ToastContainer } from "react-toastify";
 import { DashboardSidebar } from "@/components/layout/Sidebar/Sidebar";
@@ -29,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" suppressHydrationWarning={true}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-100 flex flex-col h-full`}
       >

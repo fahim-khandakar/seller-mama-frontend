@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "../globals.css";
+import "./globals.css";
 import TopBanner from "@/components/layout/Banner/TopBanner";
 import TopNavbar from "@/components/layout/Navbar/TopNavbar";
 import Footer from "@/components/layout/Footer";
@@ -28,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning={true}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-100 `}
       >
