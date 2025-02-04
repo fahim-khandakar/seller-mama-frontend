@@ -1,4 +1,3 @@
-import { Home, ShoppingCart, Users, BarChart2, Settings } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -11,20 +10,13 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-
-const navItems = [
-  { icon: Home, label: "Dashboard", href: "/dashboard" },
-  { icon: ShoppingCart, label: "Orders", href: "/dashboard/orders" },
-  { icon: Users, label: "Customers", href: "/dashboard/customers" },
-  { icon: BarChart2, label: "Analytics", href: "/dashboard/analytics" },
-  { icon: Settings, label: "Settings", href: "/dashboard/settings" },
-];
+import { navItems } from "./config/constant";
 
 export function DashboardSidebar() {
   return (
     <Sidebar>
-      <SidebarHeader className="flex h-14 items-center border-b px-6">
-        <span className="text-lg font-semibold">E-Commerce</span>
+      <SidebarHeader className="flex py-[13.5px] items-center border-b px-6">
+        <span className="text-lg font-semibold">Seller Mama</span>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

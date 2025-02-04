@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Azeret_Mono as Geist_Mono } from "next/font/google";
-import "../(global)/globals.css";
+import "./dashboard.css";
 import Providers from "@/redux/Providers";
 import { ToastContainer } from "react-toastify";
 import { DashboardSidebar } from "@/components/layout/Sidebar/Sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardHeader } from "@/components/layout/Sidebar/partials/DashboardHeader";
-import type React from "react"; // Import React
+import React from "react"; // Import React
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,15 +31,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-100 flex flex-col h-full`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-full`}
       >
         <Providers>
           <SidebarProvider>
-            <div className="flex flex-grow overflow-hidden">
+            <div className="flex flex-grow overflow-hidden  ">
               <DashboardSidebar />
               <SidebarInset className="flex flex-col flex-grow w-full overflow-hidden">
                 <DashboardHeader />
-                <main className="flex-grow overflow-y-auto bg-muted/50 p-6">
+                <main className="flex-grow overflow-y-auto  p-5 bg-zinc-100">
                   {children}
                 </main>
               </SidebarInset>
