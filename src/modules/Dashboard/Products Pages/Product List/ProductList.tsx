@@ -1,11 +1,12 @@
-import { CommonTable } from "@/components/common/Common Table/CommonTable";
+import CommonTable from "@/components/common/Common Table/CommonTable";
 import React from "react";
+import { tableHeader, tableLayout } from "./config/constants";
 
 const ProductList = () => {
   // Sample data
   const data = [
     {
-      id: 1,
+      _id: 1,
       name: "John Doe",
       email: "john@example.com",
       photo:
@@ -14,7 +15,7 @@ const ProductList = () => {
       designation: "hello",
     },
     {
-      id: 2,
+      _id: 2,
       name: "Jane Smith",
       email: "jane@example.com",
       photo:
@@ -26,13 +27,11 @@ const ProductList = () => {
 
   return (
     <div>
-      <div>
-        <CommonTable
-          topBtnLink="/dashboard/products/product-add"
-          topBtnValue="Add Product"
-          data={data}
-        />
-      </div>
+      <CommonTable
+        dataLayout={tableLayout}
+        headerData={tableHeader}
+        itemData={data}
+      />
     </div>
   );
 };

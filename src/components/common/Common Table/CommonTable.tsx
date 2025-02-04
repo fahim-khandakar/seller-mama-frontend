@@ -1,173 +1,222 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Eye, Pencil, Trash2 } from "lucide-react";
-import { useCallback } from "react";
 import Link from "next/link";
+import {
+  handleAllCheckboxChange,
+  handleCheckboxChange,
+} from "./helpers/handleCheckbox";
+import { emptyData } from "@/shared/config/constants";
+import { Box, Edit, Trash } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import TopOfPage from "../Top of Page/TopOfPage";
+import Loading from "../Loading/Loading";
+import NoData from "../No Data/NoData";
+import PaginationPage from "../Pagination/PaginationPage";
 
-interface CustomTableProps {
-  data: any[];
-  showView?: boolean;
-  showEdit?: boolean;
-  showDelete?: boolean;
-  onView?: (id: string | number) => void;
-  onEdit?: (id: string | number) => void;
-  onDelete?: (id: string | number) => void;
+interface CommonTableProps {
+  headerData?: string[];
+  checkedRows?: (string | number)[];
+  setCheckedRows?: React.Dispatch<React.SetStateAction<(string | number)[]>>;
+  receipt?: string;
+  link?: string;
+  checkbox?: boolean;
+  productData?: boolean;
+  itemData?: any[];
+  dataLayout?: string[];
+  btnLink?: string;
+  btnValue?: string;
+  deleteBtn?: boolean;
+  deleteFn?: (id: string) => void;
+  editPageLink?: string;
+  modalFunction?: (id: string) => void;
+  loading?: boolean;
+  labelDeleteCondition?: boolean;
+  labelEditCondition?: boolean;
+  currentPage?: number;
+  setCurrentPage?: (page: number) => void;
+  limit?: number;
+  totalItems?: number;
+  pagination?: boolean;
+  title?: string;
   topBtnLink?: string;
   topBtnValue?: string;
+  handleFunCall?: () => void;
+  funBtnValue?: string;
+  isSearch?: boolean;
+  labelBadgeLink?: string;
 }
 
-export function CommonTable({
-  data,
-  showView = true,
-  showEdit = true,
-  showDelete = true,
-  onView,
-  onEdit,
-  onDelete,
-  topBtnValue = "",
-  topBtnLink = "",
-}: CustomTableProps) {
-  // Memoized handlers
-  const handleView = useCallback(
-    (id: string | number) => () => onView?.(id),
-    [onView]
-  );
-  const handleEdit = useCallback(
-    (id: string | number) => () => onEdit?.(id),
-    [onEdit]
-  );
-  const handleDelete = useCallback(
-    (id: string | number) => () => onDelete?.(id),
-    [onDelete]
-  );
+const CommonTable: React.FC<CommonTableProps> = ({
+  headerData = [],
+  checkedRows = [],
+  setCheckedRows,
+  link,
+  checkbox = false,
+  productData = false,
+  itemData = [],
+  dataLayout = [],
 
-  if (!data || data.length === 0) return null;
-
-  // Extract table columns excluding 'id'
-  const columns = Object.keys(data[0]).filter((key) => key !== "id");
-
+  deleteBtn = false,
+  deleteFn,
+  editPageLink,
+  modalFunction,
+  loading = false,
+  labelDeleteCondition = true,
+  labelEditCondition = true,
+  currentPage = 1,
+  setCurrentPage,
+  limit = 10,
+  totalItems = 0,
+  pagination = false,
+  title,
+  topBtnLink,
+  topBtnValue,
+  handleFunCall,
+  funBtnValue,
+  isSearch,
+}) => {
   return (
-    <div className="bg-white p-5 shadow-lg rounded-md">
-      <div className="flex justify-between  pb-10">
-        <h5>Total Data: {data?.length}</h5>
-        {topBtnLink ? (
-          <Link href={topBtnLink}>
-            <Button>{topBtnValue}</Button>
-          </Link>
-        ) : (
-          topBtnValue && <Button>{topBtnValue}</Button>
+    <div className="relative bg-white shadow-lg rounded-lg min-h-[82vh]">
+      <div className="pt-5">
+        {(title || isSearch) && (
+          <TopOfPage
+            funBtnValue={funBtnValue}
+            handleFunCall={handleFunCall}
+            btnValue={topBtnValue}
+            link={topBtnLink}
+            pageName={title}
+            isSearch={isSearch}
+          />
         )}
       </div>
-
-      <div className="rounded-md border overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {columns.map((column) => (
-                <TableHead key={column} className="capitalize text-center">
-                  {column.replace(/_/g, " ")}
-                </TableHead>
-              ))}
-              {(showView || showEdit || showDelete) && (
-                <TableHead className="text-center">Actions</TableHead>
-              )}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.map((row) => (
-              <TableRow key={row.id}>
-                {columns.map((column) => (
-                  <TableCell key={column} className="text-center">
-                    {renderCell(column, row[column])}
-                  </TableCell>
+      <div
+        className={`w-full flex flex-col items-center py-8 ${
+          itemData.length && "pb-20"
+        }`}
+      >
+        <div className="overflow-x-auto w-full">
+          {loading ? (
+            <div className="flex justify-center items-center min-h-[60vh]">
+              <Loading />
+            </div>
+          ) : itemData.length > 0 ? (
+            <table className="table-auto w-full text-center border-collapse">
+              <thead className="bg-gray-100 text-gray-700 text-xs">
+                <tr>
+                  {checkbox && (
+                    <th className="p-3">
+                      <Checkbox
+                        checked={checkedRows.length === itemData.length}
+                        onCheckedChange={() =>
+                          handleAllCheckboxChange(
+                            checkedRows,
+                            setCheckedRows,
+                            itemData,
+                            productData
+                          )
+                        }
+                      />
+                    </th>
+                  )}
+                  {headerData.map((title, index) =>
+                    (!labelDeleteCondition && title === "Delete") ||
+                    (!labelEditCondition && title === "Edit") ? null : (
+                      <th key={index} className="p-3 font-semibold">
+                        {title}
+                      </th>
+                    )
+                  )}
+                </tr>
+              </thead>
+              <tbody className="text-gray-800 text-xs">
+                {itemData.map((item, index) => (
+                  <tr
+                    key={index}
+                    className="border-b hover:bg-gray-50 transition-colors"
+                  >
+                    {checkbox && (
+                      <td className="p-3">
+                        <Checkbox
+                          checked={checkedRows.includes(
+                            item?.id || item?.name || item?.productId
+                          )}
+                          onCheckedChange={() =>
+                            handleCheckboxChange(
+                              item?.id || item?.name || item?.productId,
+                              checkedRows,
+                              setCheckedRows
+                            )
+                          }
+                        />
+                      </td>
+                    )}
+                    {dataLayout.map((layout, idx) => (
+                      <td key={idx} className="p-3">
+                        {layout.includes("item") && link ? (
+                          <Link
+                            className="hover:underline"
+                            href={`${link}/${item?.id || item?._id}`}
+                          >
+                            {eval(layout)}
+                          </Link>
+                        ) : (
+                          eval(layout) || (eval(layout) === 0 ? 0 : emptyData)
+                        )}
+                      </td>
+                    ))}
+                    {deleteBtn && deleteFn && (
+                      <td className="p-3">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => deleteFn(item?._id)}
+                        >
+                          <Trash className="text-red-500 hover:text-red-700" />
+                        </Button>
+                      </td>
+                    )}
+                    {modalFunction && (
+                      <td className="p-3">
+                        <Button onClick={() => modalFunction(item?.id)}>
+                          <Box />
+                        </Button>
+                      </td>
+                    )}
+                    {editPageLink && (
+                      <td className="p-3">
+                        <Link
+                          href={`${editPageLink}/${item?.id}`}
+                          className="text-gray-600 hover:text-blue-500"
+                        >
+                          <Edit />
+                        </Link>
+                      </td>
+                    )}
+                  </tr>
                 ))}
-                {(showView || showEdit || showDelete) && (
-                  <TableCell>
-                    <div className="flex justify-center gap-2">
-                      {showView && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={handleView(row.id)}
-                          className="h-8 w-8 text-blue-500 hover:text-blue-700"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      )}
-                      {showEdit && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={handleEdit(row.id)}
-                          className="h-8 w-8 text-green-500 hover:text-green-700"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                      )}
-                      {showDelete && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={handleDelete(row.id)}
-                          className="h-8 w-8 text-red-500 hover:text-red-700"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-                  </TableCell>
-                )}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+              </tbody>
+            </table>
+          ) : (
+            <div className="w-[550px] mx-auto">
+              <NoData />
+            </div>
+          )}
+        </div>
       </div>
+      {pagination && setCurrentPage && (
+        <div className="absolute right-5 bottom-5">
+          <PaginationPage
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            limit={limit}
+            totalItems={totalItems}
+          />
+        </div>
+      )}
     </div>
   );
-}
+};
 
-function renderCell(column: string, value: any) {
-  if (
-    typeof value === "string" &&
-    (column.toLowerCase().includes("image") ||
-      column.toLowerCase().includes("photo") ||
-      column.toLowerCase().includes("avatar"))
-  ) {
-    return (
-      <Avatar className="w-8 h-8 mx-auto">
-        <AvatarImage src={value} />
-        <AvatarFallback>NA</AvatarFallback>
-      </Avatar>
-    );
-  }
-
-  if (column.toLowerCase().includes("status")) {
-    return (
-      <Badge
-        className={
-          value === "active"
-            ? "bg-green-500"
-            : value === "pending"
-            ? "bg-yellow-500"
-            : "bg-red-500"
-        }
-      >
-        {value}
-      </Badge>
-    );
-  }
-
-  return value;
-}
+export default CommonTable;
