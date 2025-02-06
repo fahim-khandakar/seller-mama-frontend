@@ -78,7 +78,7 @@ const CommonTable: React.FC<CommonTableProps> = ({
   isSearch,
 }) => {
   return (
-    <div className="relative bg-white shadow-lg rounded-lg min-h-[82vh]">
+    <div className="relative bg-white shadow-lg rounded-lg min-h-[82vh] ">
       <div className="pt-5">
         {(title || isSearch) && (
           <TopOfPage

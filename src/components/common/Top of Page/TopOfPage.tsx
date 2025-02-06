@@ -1,33 +1,34 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import PageTitle from "../Page Title/PageTitle";
+import { Link, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Cross, Link } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
-const TopOfPage = ({
+interface TopOfPageProps {
+  pageName?: string;
+  isSearch?: boolean;
+  btnValue?: string;
+  handleFunCall?: () => void;
+  funBtnValue?: string;
+  link?: string;
+}
+
+const TopOfPage: React.FC<TopOfPageProps> = ({
   pageName,
-  link,
   isSearch,
   btnValue,
   handleFunCall,
   funBtnValue,
-}: {
-  pageName?: string;
-  isSearch?: boolean;
-  btnValue?: string;
-  handleFunCall?: any;
-  funBtnValue?: string;
-  link?: string;
+  link,
 }) => {
-  const [activeRoute, setActiveRoute] = useState("");
+  const [activeRoute, setActiveRoute] = useState<string>("");
   const navigate = useRouter();
 
   const setQuery = (paramName: string, paramValue: string) => {
     const queryParams = new URLSearchParams(window.location.search);
     if (paramValue === "") {
       queryParams.delete(paramName);
-      queryParams.delete("searchTerm");
+      queryParams.delete("search_query");
     } else {
       queryParams.set(paramName, paramValue);
     }
@@ -35,56 +36,55 @@ const TopOfPage = ({
   };
 
   const handleFilter = (route: string) => {
-    setQuery("searchTerm", route);
+    setQuery("search_query", route);
     setActiveRoute(route);
   };
 
   return (
     <div className="flex justify-between items-center px-5">
-      {pageName && <PageTitle title={pageName} />}
+      {pageName && <h1 className="text-xl font-semibold">{pageName}</h1>}
 
       {isSearch && (
-        <div>
-          <div className="sm:pr-3 mb-4 sm:mb-0">
-            <div className="join mt-1">
-              <div>
-                <div className="relative">
-                  <input
-                    id="products-search"
-                    value={activeRoute}
-                    onChange={(e) => setActiveRoute(e.target.value)}
-                    className="input input-bordered join-item focus:outline-none"
-                    placeholder="Search for products"
-                  />
-                  {activeRoute && (
-                    <Button
-                      onClick={() => {
-                        setActiveRoute("");
-                        setQuery("searchTerm", "");
-                      }}
-                      className="!absolute right-2 top-0 bottom-0 !text-black border-l-2 !my-2  !pl-2"
-                    >
-                      <Cross />
-                    </Button>
-                  )}
-                </div>
-              </div>
-
-              <div className="indicator">
-                <button
-                  onClick={() => handleFilter(activeRoute)}
-                  className="btn join-item bg-base-300"
+        <div className="pr-3 mb-4 ">
+          <div className="flex">
+            <div className="relative">
+              <Input
+                id="products-search"
+                value={activeRoute}
+                onChange={(e) => setActiveRoute(e.target.value)}
+                className="input input-bordered focus:outline-none"
+                placeholder="Search for products"
+              />
+              {activeRoute && (
+                <Button
+                  variant={"link"}
+                  onClick={() => {
+                    setActiveRoute("");
+                    setQuery("search_query", "");
+                  }}
+                  className="!absolute right-0 top-0 bottom-0 !text-black border-l-2  !pl-2"
                 >
-                  Search
-                </button>
-              </div>
+                  <X />
+                </Button>
+              )}
+            </div>
+
+            <div className="indicator">
+              <Button
+                variant={"default"}
+                onClick={() => handleFilter(activeRoute)}
+                className="join-item"
+              >
+                Search
+              </Button>
             </div>
           </div>
         </div>
       )}
+
       <div>
         {link && (
-          <Link to={link}>
+          <Link href={link}>
             <Button>{btnValue}</Button>
           </Link>
         )}

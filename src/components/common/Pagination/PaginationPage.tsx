@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -120,7 +122,7 @@ const PaginationPage: React.FC<PaginationProps> = ({
         <Button
           onClick={handlePrevPage}
           disabled={currentPage === 1}
-          variant="outline"
+          variant="default"
         >
           Prev
         </Button>
@@ -128,7 +130,7 @@ const PaginationPage: React.FC<PaginationProps> = ({
         <Button
           onClick={handleNextPage}
           disabled={currentPage === numberOfPages}
-          variant="outline"
+          variant="default"
         >
           Next
         </Button>

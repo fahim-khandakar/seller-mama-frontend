@@ -10,19 +10,40 @@ import { getFromCookie } from "@/shared/helpers/localStorage";
 import { tableHeader, tableLayout } from "./config/constants";
 import { WarningToast } from "@/shared/helpers/warningSwal";
 import { showToast } from "@/shared/helpers/showToast";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "@/components/common/Modal/Modal";
 import UserEdit from "../User Edit/UserEdit";
 import UserAddByAdmin from "../User Add by Admin/UserAddByAdmin";
+import { constructQuery } from "@/shared/helpers/constructQuery";
+import { useSearchParams } from "next/navigation";
 
 const UserList = () => {
   const token = getFromCookie(authKey);
   const [id, setId] = useState("");
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const limit = 10;
+  const [totalItems, setTotalItems] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const { data, isLoading } = useGetUsersQuery({ token });
+  const searchParams = useSearchParams();
+  const query = constructQuery({
+    searchParams,
+    limit,
+    page: currentPage,
+  });
+
+  const { data, isLoading, isFetching } = useGetUsersQuery({ token, query });
   const [deleteUser, { isLoading: deleteLoading }] = useDeleteUserMutation();
+
+  useEffect(() => {
+    if (data?.success) {
+      setTotalItems(data?.meta?.totalItems);
+      setCurrentPage(data?.meta?.currentPage);
+    }
+  }, [data]);
+  console.log("query", query);
+  console.log("data", data);
 
   const handleDelete = async (id?: string) => {
     const result = await deleteUser({ id, token });
@@ -42,7 +63,7 @@ const UserList = () => {
     <div>
       <CommonTable
         title="Users List"
-        loading={isLoading || deleteLoading}
+        loading={isLoading || deleteLoading || isFetching}
         dataLayout={tableLayout}
         headerData={tableHeader}
         itemData={data?.data}
@@ -51,6 +72,12 @@ const UserList = () => {
         modalFunction={(id) => handleEditModal(id)}
         handleFunCall={handleAddModal}
         funBtnValue="Add User"
+        pagination
+        totalItems={totalItems}
+        currentPage={currentPage}
+        limit={limit}
+        setCurrentPage={setCurrentPage}
+        isSearch
       />
 
       {/* User Edit Modal */}
