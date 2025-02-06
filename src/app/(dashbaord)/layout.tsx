@@ -3,10 +3,10 @@ import { Geist, Azeret_Mono as Geist_Mono } from "next/font/google";
 import "./dashboard.css";
 import Providers from "@/redux/Providers";
 import { ToastContainer } from "react-toastify";
-import { DashboardSidebar } from "@/components/layout/Sidebar/Sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardHeader } from "@/components/layout/Sidebar/partials/DashboardHeader";
 import React from "react"; // Import React
+import DashboardSidebar from "@/components/layout/Sidebar/Sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
