@@ -1,72 +1,68 @@
 "use client";
 
-import { Lock, Mail, Phone, User, Eye, EyeOff } from "lucide-react"; // Add Eye and EyeOff icons
+import { Mail, Phone, User } from "lucide-react"; // Add Eye and EyeOff icons
 import InputGroup from "@/components/ui/input-group";
-import { cn } from "@/lib/utils";
-import { useState } from "react"; // Import useState for form state management
-import { useCreateUserMutation } from "@/redux/features/users";
+import { useEffect, useState } from "react"; // Import useState for form state management
+import {
+  useGetSingleUserQuery,
+  useUserEditMutation,
+} from "@/redux/features/users";
 import { showToast } from "@/shared/helpers/showToast";
-import { useRouter } from "next/navigation";
 import CustomButton from "@/components/common/Button/Button";
+import { getFromCookie } from "@/shared/helpers/localStorage";
+import { authKey } from "@/shared/config/constants";
+import Loading from "@/components/common/Loading/Loading";
 
-const UserEdit = () => {
-  const router = useRouter();
+const UserEdit = ({
+  id,
+  setIsOpen,
+}: {
+  id: string;
+  setIsOpen: (isOpen: boolean) => void;
+}) => {
+  const token = getFromCookie(authKey);
   // State for form inputs
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
-  // States for toggling password visibility
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { data: singleData, isLoading: dataLoading } = useGetSingleUserQuery(
+    { token, id },
+    { skip: !id }
+  );
+  const [editUser, { isLoading }] = useUserEditMutation();
 
-  const [createUser, { isLoading }] = useCreateUserMutation();
+  useEffect(() => {
+    if (singleData?.data) {
+      setEmail(singleData?.data?.email);
+      setPhone(singleData?.data?.phone);
+      setName(singleData?.data?.name);
+    }
+  }, [singleData]);
 
   // Form submission handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Custom password matching validation
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-
     const fullData = {
       email,
       phone,
       name,
-      password,
     };
 
-    const result = await createUser({ fullData });
+    const result = await editUser({ fullData, id, token });
     const isToastTrue = showToast(result);
     if (isToastTrue) {
-      router.push("/signin");
+      setIsOpen(false);
     }
   };
 
-  // Toggle password visibility
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  // Toggle confirm password visibility
-  const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
-  };
+  if (dataLoading) {
+    return <Loading />;
+  }
 
   return (
-    <div className="max-w-xl mx-auto my-10 w-full px-6 rounded-lg shadow-lg py-10 bg-white">
-      <h2
-        className={cn([
-          "text-[32px] leading-[36px] md:text-5xl mb-8 md:mb-10 text-center capitalize",
-        ])}
-      >
-        Sign Up
-      </h2>
+    <div className="max-w-xl mx-auto  w-full px-6 rounded-lg shadow-lg py-10 bg-white">
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Name Input */}
         <InputGroup className="flex bg-white rounded-lg border mb-[14px]">
@@ -116,53 +112,8 @@ const UserEdit = () => {
           />
         </InputGroup>
 
-        {/* Password Input */}
-        <InputGroup className="flex bg-white rounded-lg border mb-[14px] relative">
-          <InputGroup.Text>
-            <Lock />
-          </InputGroup.Text>
-          <InputGroup.Input
-            required
-            type={showPassword ? "text" : "password"}
-            name="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="bg-transparent placeholder:text-black/40 placeholder:text-sm sm:placeholder:text-base"
-          />
-          <button
-            type="button"
-            onClick={togglePasswordVisibility}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-          >
-            {showPassword ? <EyeOff /> : <Eye />}{" "}
-          </button>
-        </InputGroup>
-
-        <InputGroup className="flex bg-white rounded-lg border mb-[14px] relative">
-          <InputGroup.Text>
-            <Lock />
-          </InputGroup.Text>
-          <InputGroup.Input
-            required
-            type={showConfirmPassword ? "text" : "password"}
-            name="confirmPassword"
-            placeholder="Confirm your password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="bg-transparent placeholder:text-black/40 placeholder:text-sm sm:placeholder:text-base"
-          />
-          <button
-            type="button"
-            onClick={toggleConfirmPasswordVisibility}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-          >
-            {showConfirmPassword ? <EyeOff /> : <Eye />}{" "}
-          </button>
-        </InputGroup>
-
         <CustomButton loading={isLoading} type="submit" className="w-full">
-          Sign Up
+          Update
         </CustomButton>
       </form>
     </div>

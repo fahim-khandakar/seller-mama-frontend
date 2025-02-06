@@ -140,11 +140,11 @@ const CommonTable: React.FC<CommonTableProps> = ({
                       <td className="p-3">
                         <Checkbox
                           checked={checkedRows.includes(
-                            item?.id || item?.name || item?.productId
+                            item?._id || item?.name || item?.productId
                           )}
                           onCheckedChange={() =>
                             handleCheckboxChange(
-                              item?.id || item?.name || item?.productId,
+                              item?._id || item?.name || item?.productId,
                               checkedRows,
                               setCheckedRows
                             )
@@ -179,7 +179,7 @@ const CommonTable: React.FC<CommonTableProps> = ({
                     )}
                     {modalFunction && (
                       <td className="p-3">
-                        <Button onClick={() => modalFunction(item?.id)}>
+                        <Button onClick={() => modalFunction(item?._id)}>
                           <Box />
                         </Button>
                       </td>
@@ -187,7 +187,7 @@ const CommonTable: React.FC<CommonTableProps> = ({
                     {editPageLink && (
                       <td className="p-3">
                         <Link
-                          href={`${editPageLink}/${item?.id}`}
+                          href={`${editPageLink}/${item?._id}`}
                           className="text-gray-600 hover:text-blue-500"
                         >
                           <Edit />

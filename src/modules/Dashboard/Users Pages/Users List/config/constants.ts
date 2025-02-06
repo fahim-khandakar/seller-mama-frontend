@@ -7,6 +7,7 @@ export const tableHeader = [
   "Created At",
   "Updated At",
   "DELETE",
+  "EDIT",
 ];
 
 export const tableLayout = [
