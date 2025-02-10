@@ -16,6 +16,6 @@ export const tableLayout = [
   "item?.role",
   "item?.isVerified ? 'Yes' : 'No'",
   "item?.orders?.length",
-  "new Date(item?.createdAt).toLocaleString()",
-  "new Date(item?.updatedAt).toLocaleString()",
+  "item?.createdAt",
+  "item?.updatedAt",
 ];

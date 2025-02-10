@@ -71,6 +71,7 @@ const UserList = () => {
         deleteFn={(id) => WarningToast(handleDelete, id)}
         modalFunction={(id) => handleEditModal(id)}
         handleFunCall={handleAddModal}
+        modalForEdit
         funBtnValue="Add User"
         pagination
         totalItems={totalItems}

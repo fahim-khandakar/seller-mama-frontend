@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
-
-import Link from "next/link";
+import { Checkbox } from "@/components/ui/checkbox";
+import Loading from "../Loading/Loading";
+import TopOfPage from "../Top of Page/TopOfPage";
 import {
   handleAllCheckboxChange,
   handleCheckboxChange,
 } from "./helpers/handleCheckbox";
 import { emptyData } from "@/shared/config/constants";
-import { Box, Edit, Trash } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import TopOfPage from "../Top of Page/TopOfPage";
-import Loading from "../Loading/Loading";
+import { Box, Edit, Trash } from "lucide-react";
 import NoData from "../No Data/NoData";
 import PaginationPage from "../Pagination/PaginationPage";
 
@@ -46,6 +45,7 @@ interface CommonTableProps {
   funBtnValue?: string;
   isSearch?: boolean;
   labelBadgeLink?: string;
+  modalForEdit?: boolean;
 }
 
 const CommonTable: React.FC<CommonTableProps> = ({
@@ -76,9 +76,10 @@ const CommonTable: React.FC<CommonTableProps> = ({
   handleFunCall,
   funBtnValue,
   isSearch,
+  modalForEdit,
 }) => {
   return (
-    <div className="relative bg-white shadow-lg rounded-lg min-h-[82vh] ">
+    <div className="relative bg-white shadow-lg rounded-lg min-h-[82vh]">
       <div className="pt-5">
         {(title || isSearch) && (
           <TopOfPage
@@ -152,20 +153,54 @@ const CommonTable: React.FC<CommonTableProps> = ({
                         />
                       </td>
                     )}
-                    {dataLayout.map((layout, idx) => (
-                      <td key={idx} className="p-3">
-                        {layout.includes("item") && link ? (
-                          <Link
-                            className="hover:underline"
-                            href={`${link}/${item?.id || item?._id}`}
-                          >
-                            {eval(layout)}
-                          </Link>
-                        ) : (
-                          eval(layout) || (eval(layout) === 0 ? 0 : emptyData)
-                        )}
-                      </td>
-                    ))}
+                    {dataLayout.map((layout, idx) => {
+                      // Split layout into array to handle nested fields
+                      const layoutParts = layout.split("?.");
+                      const field = layoutParts[layoutParts.length - 1]; // Get last part after "?."
+
+                      return (
+                        <td key={idx} className="p-3">
+                          {/^(images?|photo|logo)$/i.test(field) ? (
+                            Array.isArray(item[field]) &&
+                            item[field].length > 0 ? (
+                              <div className="flex justify-center items-center w-full">
+                                <Image
+                                  src={item[field][0]} // Show the first image
+                                  alt="img"
+                                  width={48}
+                                  height={48}
+                                  className="h-12 w-12 object-cover rounded"
+                                />
+                              </div>
+                            ) : (
+                              <div className="flex justify-center items-center w-full">
+                                <Image
+                                  src={item[field]}
+                                  alt="img"
+                                  width={48}
+                                  height={48}
+                                  className="h-12 w-12 object-cover rounded"
+                                />
+                              </div>
+                            )
+                          ) : layout.includes("item") && link ? (
+                            <Link
+                              className="hover:underline"
+                              href={`${link}/${item?.id || item?._id}`}
+                            >
+                              {item[field]}
+                            </Link>
+                          ) : // Check if the layout is related to dates, slice it if needed
+                          field.includes("createdAt") ||
+                            field.includes("updatedAt") ? (
+                            new Date(item[field]).toISOString().slice(0, 10)
+                          ) : (
+                            item[field] ?? emptyData
+                          )}
+                        </td>
+                      );
+                    })}
+
                     {deleteBtn && deleteFn && (
                       <td className="p-3">
                         <Button
@@ -179,8 +214,11 @@ const CommonTable: React.FC<CommonTableProps> = ({
                     )}
                     {modalFunction && (
                       <td className="p-3">
-                        <Button onClick={() => modalFunction(item?._id)}>
-                          <Box />
+                        <Button
+                          variant={`${modalForEdit ? "link" : "default"}`}
+                          onClick={() => modalFunction(item?._id)}
+                        >
+                          {modalForEdit ? <Edit /> : <Box />}
                         </Button>
                       </td>
                     )}

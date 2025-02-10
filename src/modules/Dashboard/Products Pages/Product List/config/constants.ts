@@ -1,2 +1,28 @@
-export const tableHeader = ["Name", "Description"];
-export const tableLayout = ["item?.name", "item?.description"];
+export const tableHeader = [
+  "Photo",
+  "Name",
+  "Bran",
+  "Category",
+  "Average Rating",
+  "Stock",
+  "Sold",
+  "Price",
+  "Description",
+  "Created Date",
+  "Updated Date",
+  "DELETE",
+  "EDIT",
+];
+export const tableLayout = [
+  "item?.images",
+  "item?.name",
+  "item?.brand",
+  "item?.category",
+  "item?.averageRating",
+  "item?.stock",
+  "item?.sold",
+  "item?.price",
+  "item?.description",
+  "item?.createdAt",
+  "item?.updatedAt",
+];

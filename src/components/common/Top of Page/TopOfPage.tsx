@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Link, X } from "lucide-react";
+import { Link, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -41,18 +41,17 @@ const TopOfPage: React.FC<TopOfPageProps> = ({
   };
 
   return (
-    <div className="flex justify-between items-center px-5">
+    <div className="flex justify-between items-center px-5 ">
       {pageName && <h1 className="text-xl font-semibold">{pageName}</h1>}
 
       {isSearch && (
-        <div className="pr-3 mb-4 ">
-          <div className="flex">
+        <div className="pr-3 mb-4">
+          <div className="flex gap-2">
             <div className="relative">
               <Input
                 id="products-search"
                 value={activeRoute}
                 onChange={(e) => setActiveRoute(e.target.value)}
-                className="input input-bordered focus:outline-none"
                 placeholder="Search for products"
               />
               {activeRoute && (
@@ -75,7 +74,7 @@ const TopOfPage: React.FC<TopOfPageProps> = ({
                 onClick={() => handleFilter(activeRoute)}
                 className="join-item"
               >
-                Search
+                <Search /> Search
               </Button>
             </div>
           </div>
