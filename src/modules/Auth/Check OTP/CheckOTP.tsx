@@ -1,25 +1,32 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import CustomButton from "@/components/common/Button/Button";
 import { Button } from "@/components/ui/button";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   useEmailVerifyMutation,
   useResendOTPMutation,
 } from "@/redux/features/auth";
 import { getUserInfo } from "@/shared/helpers/authServices";
 import { showToast } from "@/shared/helpers/showToast";
+import { useEffect, useState } from "react";
 
-import { useState, useEffect } from "react";
+const formatTimer = (seconds: number) => {
+  if (seconds >= 60) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  }
+  return `${seconds}s`;
+};
 
 const CheckOTP = () => {
   const [user, setUser] = useState<any>(null);
-
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
   const [timer, setTimer] = useState(300);
   const [isResendDisabled, setIsResendDisabled] = useState(false);
 
   const [emailVerify, { isLoading }] = useEmailVerifyMutation();
-  const [resendOTP] = useResendOTPMutation();
+  const [resendOTP, { isLoading: resendLoading }] = useResendOTPMutation();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -30,7 +37,6 @@ const CheckOTP = () => {
     fetchUser();
   }, []);
 
-  console.log("user", user);
   useEffect(() => {
     if (timer > 0) {
       const interval = setInterval(() => {
@@ -41,7 +47,7 @@ const CheckOTP = () => {
       setIsResendDisabled(false);
     }
   }, [timer]);
-  console.log("otp", otp);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
@@ -71,9 +77,7 @@ const CheckOTP = () => {
   };
 
   const handleResendOTP = async () => {
-    const result = await resendOTP({
-      fullData: { email: user?.email },
-    });
+    const result = await resendOTP({ fullData: { email: user?.email } });
     const isToastTrue = showToast(result);
 
     if (isToastTrue) {
@@ -112,7 +116,7 @@ const CheckOTP = () => {
         <div className="mt-4 text-center">
           <p className="text-sm text-gray-500">
             {timer > 0 ? (
-              <span>Resend OTP in {timer}s</span>
+              <span>Resend OTP in {formatTimer(timer)}</span>
             ) : (
               <Button
                 onClick={handleResendOTP}
@@ -120,7 +124,7 @@ const CheckOTP = () => {
                 disabled={isResendDisabled}
                 className={`${isResendDisabled ? "cursor-not-allowed" : ""}`}
               >
-                Resend OTP
+                {resendLoading ? "Sending..." : "Resend OTP"}
               </Button>
             )}
           </p>
