@@ -6,7 +6,6 @@ export function middleware(request: NextRequest) {
   const { cookies } = request;
   const authToken = cookies.get("accessToken")?.value;
   const user: any = authToken ? decodedToken(authToken) : null;
-  // const user: any = { role: "admin" };
   const isLogged = !!authToken;
 
   const url = request.nextUrl.clone();

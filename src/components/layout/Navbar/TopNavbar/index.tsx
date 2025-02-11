@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavMenu } from "../navbar.types";
 import { MenuList } from "./MenuList";
 import {
@@ -21,10 +22,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-
-import { getFromCookie } from "@/shared/helpers/localStorage";
-import { authKey } from "@/shared/config/constants";
-import { useGetMeQuery } from "@/redux/features/auth";
+import { getUserInfo } from "@/shared/helpers/authServices";
+import { logout } from "@/shared/helpers/logout";
 
 const data: NavMenu = [
   {
@@ -82,9 +81,18 @@ const data: NavMenu = [
 ];
 
 const TopNavbar = () => {
-  const token = getFromCookie(authKey);
-  const { data: user } = useGetMeQuery({ token });
-  console.log("data", user);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userInfo = await getUserInfo();
+      setUser(userInfo);
+    };
+
+    fetchUser();
+  }, []);
+
+  console.log("user", user);
   return (
     <nav className="sticky top-0 bg-white z-20">
       <div className="flex gap-5 relative max-w-7xl mx-auto items-center justify-between md:justify-start py-5 md:py-6 px-4 xl:px-0">
@@ -131,13 +139,11 @@ const TopNavbar = () => {
             <Search />
           </Link>
           <CartBtn />
-          <Link
-            href={user?.data?.role === "ADMIN" ? "/dashboard" : "/signin"}
-            className="p-1"
-          >
+
+          {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <User className="!text-2xl" />
+                <User size={24} className=" cursor-pointer" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -147,10 +153,21 @@ const TopNavbar = () => {
                 </Link>
                 <DropdownMenuItem>Profile</DropdownMenuItem>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuItem>Logout</DropdownMenuItem>
+                <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </Link>
+          ) : (
+            <>
+              <Link
+                href={"/signin"}
+                className="flex items-center pl-2 cursor-pointer"
+              >
+                <span className="text-sm">
+                  Account <span className="text-gray-400">LOGIN</span>
+                </span>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>

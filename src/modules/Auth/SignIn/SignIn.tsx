@@ -7,13 +7,11 @@ import Link from "next/link"; // Import the Link component from Next.js
 import { useState } from "react"; // Import useState for form state management
 import { useSignInMutation } from "@/redux/features/auth";
 import { showToast } from "@/shared/helpers/showToast";
-import { useRouter } from "next/navigation";
 import CustomButton from "@/components/common/Button/Button";
 import { setCookie } from "cookies-next";
 import { authKey } from "@/shared/config/constants";
 
 const SignIn = () => {
-  const router = useRouter();
   // State for form inputs
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,7 +32,7 @@ const SignIn = () => {
     const isToastTrue = showToast(result);
     if (isToastTrue) {
       setCookie(authKey, result?.data?.data?.token);
-      router.push("/");
+      window.location.href = "/";
     }
   };
 
