@@ -15,6 +15,33 @@ const AuthApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["user"],
     }),
+    emailVerify: builder.mutation({
+      query: ({ fullData, token }) => {
+        return {
+          url: "/users/email-verify",
+          headers: {
+            authorization: token,
+          },
+          method: "POST",
+          body: fullData,
+        };
+      },
+      invalidatesTags: ["user"],
+    }),
+
+    resendOTP: builder.mutation({
+      query: ({ fullData, token }) => {
+        return {
+          url: "/users/resent-mail-verify",
+          headers: {
+            authorization: token,
+          },
+          method: "POST",
+          body: fullData,
+        };
+      },
+      invalidatesTags: ["user"],
+    }),
 
     getMe: builder.query({
       query: ({ token }) => {
@@ -30,4 +57,9 @@ const AuthApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useSignInMutation, useGetMeQuery } = AuthApi;
+export const {
+  useSignInMutation,
+  useGetMeQuery,
+  useEmailVerifyMutation,
+  useResendOTPMutation,
+} = AuthApi;

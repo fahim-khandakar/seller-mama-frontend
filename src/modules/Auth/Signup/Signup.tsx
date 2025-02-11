@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Lock, Mail, Phone, User, Eye, EyeOff } from "lucide-react"; // Add Eye and EyeOff icons
@@ -5,9 +6,11 @@ import InputGroup from "@/components/ui/input-group";
 import { cn } from "@/lib/utils";
 import { useState } from "react"; // Import useState for form state management
 import { useCreateUserMutation } from "@/redux/features/users";
-import { showToast } from "@/shared/helpers/showToast";
 import { useRouter } from "next/navigation";
 import CustomButton from "@/components/common/Button/Button";
+import { toast } from "react-toastify";
+import { setToCookie } from "@/shared/helpers/localStorage";
+import { authKey } from "@/shared/config/constants";
 
 const SignUp = () => {
   const router = useRouter();
@@ -41,10 +44,13 @@ const SignUp = () => {
       password,
     };
 
-    const result = await createUser({ fullData });
-    const isToastTrue = showToast(result);
-    if (isToastTrue) {
-      router.push("/signin");
+    const result: any = await createUser({ fullData });
+
+    if (result?.data?.success) {
+      setToCookie(authKey, result?.data?.data?.token);
+      router.push("/check-otp");
+    } else {
+      toast.error(result?.error?.data?.message);
     }
   };
 
