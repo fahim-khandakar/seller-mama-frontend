@@ -5,7 +5,7 @@ import logo from "@/assets/Seller_Mama_Logo bg remove.png";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-neutral-950 relative overflow-hidden">
+    <div className="h-screen bg-neutral-950 relative overflow-hidden flex items-center justify-center">
       {/* Animated gradient orbs */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-1/4 w-[500px] h-[500px] bg-gradient-to-r from-emerald-600/30 to-teal-600/30 rounded-full mix-blend-screen filter blur-[120px] animate-float" />
@@ -28,86 +28,85 @@ export default function Home() {
       {/* Vignette effect */}
       <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-neutral-950" />
 
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 py-16">
-        <div className="mx-auto max-w-4xl text-center space-y-12">
-          {/* Logo */}
-          <div className="animate-fade-in opacity-0 [animation-delay:0.1s] [animation-fill-mode:forwards]">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-white to-neutral-200 text-neutral-900 shadow-2xl shadow-white/10">
-              <Image src={logo} alt="Logo" />
-            </div>
-            <h1 className="text-3xl font-bold">Seller Mama</h1>
-            {/* Contact Info */}
-            <div className="text-neutral-400 text-sm space-y-1">
-              <p>
-                <span className="font-semibold text-neutral-300">
-                  Contact No:
-                </span>{" "}
-                +880 1581039359
-              </p>
-              <p>
-                <span className="font-semibold text-neutral-300">Email:</span>{" "}
-                sellermamabd@gmail.com
-              </p>
-            </div>
+      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 py-10 max-w-4xl space-y-8">
+        {/* Logo + Contact */}
+        <div className="animate-fade-in opacity-0 [animation-delay:0.1s] [animation-fill-mode:forwards] space-y-3">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-white to-neutral-200 text-neutral-900 shadow-2xl shadow-white/10">
+            <Image src={logo} alt="Logo" />
           </div>
+          <h1 className="text-3xl font-bold text-white">Seller Mama</h1>
 
-          {/* Main content */}
-          <div className="space-y-8">
-            <div className="animate-fade-in-up opacity-0 [animation-delay:0.2s] [animation-fill-mode:forwards]">
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-balance">
-                <span className="bg-gradient-to-r from-white via-neutral-100 to-neutral-300 bg-clip-text text-transparent">
-                  Something
-                </span>
-                <br />
-                <span className="bg-gradient-to-r from-white via-neutral-100 to-neutral-300 bg-clip-text text-transparent">
-                  extraordinary
-                </span>
-                <br />
-                <span className="bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500 bg-clip-text text-transparent">
-                  is coming
-                </span>
-              </h1>
-            </div>
-
-            <div className="animate-fade-in-up opacity-0 [animation-delay:0.4s] [animation-fill-mode:forwards]">
-              <p className="text-lg sm:text-xl md:text-2xl text-neutral-400 max-w-3xl mx-auto font-light leading-relaxed">
-                We&apos;re building something remarkable.
-                <br />
-                <span className="text-neutral-500">
-                  A premium ecommerce experience like no other.
-                </span>
-              </p>
-            </div>
+          {/* Contact Info */}
+          <div className="text-neutral-400 text-sm leading-relaxed">
+            <p>
+              <span className="font-semibold text-neutral-300">
+                Contact No:
+              </span>{" "}
+              +880 1581039359
+            </p>
+            <p>
+              <span className="font-semibold text-neutral-300">Email:</span>{" "}
+              sellermamabd@gmail.com
+            </p>
           </div>
+        </div>
 
-          {/* Status badge */}
-          <div className="animate-fade-in opacity-0 [animation-delay:0.6s] [animation-fill-mode:forwards]">
-            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl mt-8 hover:bg-white/10 transition-all duration-300 group">
-              <Sparkles className="w-5 h-5 text-orange-400" />
-              <span className="text-sm text-neutral-300 font-medium tracking-wide">
-                Under Construction
+        {/* Main content */}
+        <div className="space-y-4">
+          <div className="animate-fade-in-up opacity-0 [animation-delay:0.2s] [animation-fill-mode:forwards]">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight ">
+              <span className="bg-gradient-to-r from-white via-neutral-100 to-neutral-300 bg-clip-text text-transparent">
+                Something
               </span>
-              <div className="flex gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
-                <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse [animation-delay:0.2s]" />
-                <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse [animation-delay:0.4s]" />
-              </div>
-            </div>
+              <br />
+              <span className="bg-gradient-to-r from-white via-neutral-100 to-neutral-300 bg-clip-text text-transparent">
+                extraordinary
+              </span>
+              <br />
+              <span className="bg-gradient-to-r from-orange-400 via-amber-400 to-orange-500 bg-clip-text text-transparent">
+                is coming
+              </span>
+            </h1>
           </div>
 
-          {/* Optional CTA */}
-          <div className="animate-fade-in cursor-pointer opacity-0 [animation-delay:0.8s] [animation-fill-mode:forwards] space-y-6">
-            <Link
-              href={"https://fahim-khandakar.web.app/"}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <button className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-neutral-900 font-semibold text-lg hover:bg-neutral-100 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/20 group">
-                Notify Me
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </Link>
+          <div className="animate-fade-in-up opacity-0 [animation-delay:0.4s] [animation-fill-mode:forwards]">
+            <p className="text-lg sm:text-xl md:text-2xl text-neutral-400 max-w-3xl mx-auto font-light leading-relaxed">
+              We&apos;re building something remarkable.
+              <br />
+              <span className="text-neutral-500">
+                A premium ecommerce experience like no other.
+              </span>
+            </p>
           </div>
+        </div>
+
+        {/* Status badge */}
+        <div className="animate-fade-in opacity-0 [animation-delay:0.6s] [animation-fill-mode:forwards]">
+          <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl mt-6 hover:bg-white/10 transition-all duration-300 group">
+            <Sparkles className="w-5 h-5 text-orange-400" />
+            <span className="text-sm text-neutral-300 font-medium tracking-wide">
+              Under Construction
+            </span>
+            <div className="flex gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse [animation-delay:0.2s]" />
+              <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse [animation-delay:0.4s]" />
+            </div>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="animate-fade-in cursor-pointer opacity-0 [animation-delay:0.8s] [animation-fill-mode:forwards]">
+          <Link
+            href={"https://fahim-khandakar.web.app/"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <button className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white text-neutral-900 font-semibold text-lg hover:bg-neutral-100 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-white/20 group">
+              Notify Me
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </Link>
         </div>
       </div>
     </div>
