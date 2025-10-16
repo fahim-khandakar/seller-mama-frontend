@@ -32,10 +32,23 @@ export default function Home() {
         <div className="mx-auto max-w-4xl text-center space-y-12">
           {/* Logo */}
           <div className="animate-fade-in opacity-0 [animation-delay:0.1s] [animation-fill-mode:forwards]">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-white to-neutral-200 text-neutral-900  shadow-2xl shadow-white/10">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-white to-neutral-200 text-neutral-900 shadow-2xl shadow-white/10">
               <Image src={logo} alt="Logo" />
             </div>
             <h1 className="text-3xl font-bold">Seller Mama</h1>
+            {/* Contact Info */}
+            <div className="text-neutral-400 text-sm space-y-1">
+              <p>
+                <span className="font-semibold text-neutral-300">
+                  Contact No:
+                </span>{" "}
+                +880 1581039359
+              </p>
+              <p>
+                <span className="font-semibold text-neutral-300">Email:</span>{" "}
+                sellermamabd@gmail.com
+              </p>
+            </div>
           </div>
 
           {/* Main content */}
@@ -82,8 +95,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Optional CTA - can be enabled later */}
-          <div className="animate-fade-in cursor-pointer opacity-0 [animation-delay:0.8s] [animation-fill-mode:forwards]">
+          {/* Optional CTA */}
+          <div className="animate-fade-in cursor-pointer opacity-0 [animation-delay:0.8s] [animation-fill-mode:forwards] space-y-6">
             <Link
               href={"https://fahim-khandakar.web.app/"}
               target="_blank"
