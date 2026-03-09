@@ -2,6 +2,7 @@ import BrandSection from "../Brand Section/BrandSection";
 import FeaturedCategoriesSection from "../Featured Categories Section/FeaturedCategoriesSection";
 import HeroSection from "../Hero Section/HeroSection";
 import TopSellersSection from "../Top Sellers Section/TopSellersSection";
+import WhyChooseUsSection from "../Why Choose Us Section/WhyChooseUsSection";
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       <BrandSection />
       <FeaturedCategoriesSection />
       <TopSellersSection />
+      <WhyChooseUsSection />
     </div>
   );
 }
