@@ -1,3 +1,9 @@
+import AboutPage from "@/modules/About/About";
+
 export default function page() {
-  return <div>About</div>;
+  return (
+    <div>
+      <AboutPage />
+    </div>
+  );
 }

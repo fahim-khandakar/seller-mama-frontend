@@ -1,3 +1,9 @@
+import ContactPage from "@/modules/Contact Us/Contact";
+
 export default function page() {
-  return <div>Contact</div>;
+  return (
+    <div>
+      <ContactPage />
+    </div>
+  );
 }
