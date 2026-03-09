@@ -23,4 +23,12 @@ export const categories = [
     href: "/shop/retro",
     className: "md:col-span-1 md:row-span-1",
   },
+  {
+    title: "Retro Classics",
+    description: "Vintage 90s & 2000s drip",
+    image:
+      "https://images.unsplash.com/photo-1518002171953-a080ee817e1f?q=80&w=600&auto=format&fit=crop",
+    href: "/shop/retro",
+    className: "md:col-span-1 md:row-span-1",
+  },
 ];
