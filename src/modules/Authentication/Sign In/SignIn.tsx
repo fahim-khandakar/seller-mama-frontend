@@ -1,11 +1,46 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import Link from "next/link";
 import { Mail, Lock, ArrowRight, LogIn } from "lucide-react";
 import { Button as ShadButton } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useLoginMutation } from "@/redux/features/auth/auth.api";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+
 
 export default function SignInPage() {
+     const router = useRouter();
+       const form = useForm({});
+
+  const [login, {isLoading}] = useLoginMutation();
+
+    const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    try {
+      const res = await login(data).unwrap();
+
+      if (res.success) {
+        toast.success("Logged in successfully");
+      router.push("/dashboard");
+      }
+    } catch (err: any) {
+      console.error(err);
+
+      if (err.data.message === "Password does not match") {
+        toast.error("Invalid credentials");
+      }
+
+      if (err.data.message === "User is not verified") {
+        toast.error("Your account is not verified");
+      router.push(`/verify?email=${data.email}`);
+           router.push("/dashboard");
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen container mx-auto bg-white dark:bg-slate-950 flex flex-col items-center justify-center p-6 pt-32 pb-20">
       <div className="w-full max-w-[420px] space-y-12">
