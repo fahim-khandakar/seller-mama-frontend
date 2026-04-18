@@ -6,39 +6,34 @@ import { Mail, Lock, ArrowRight, LogIn } from "lucide-react";
 import { Button as ShadButton } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLoginMutation } from "@/redux/features/auth/auth.api";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { handleResponse } from "@/shared/helpers/handleResponse";
 
-
+type FormValues = {
+  email: string;
+  password: string;
+};
 
 export default function SignInPage() {
-     const router = useRouter();
-       const form = useForm({});
+  const router = useRouter();
 
-  const [login, {isLoading}] = useLoginMutation();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
 
-    const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    try {
-      const res = await login(data).unwrap();
+  const [login, { isLoading }] = useLoginMutation();
 
-      if (res.success) {
-        toast.success("Logged in successfully");
-      router.push("/dashboard");
-      }
-    } catch (err: any) {
-      console.error(err);
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    console.log("data", data)
+      const isSuccess = await handleResponse(login(data).unwrap());
 
-      if (err.data.message === "Password does not match") {
-        toast.error("Invalid credentials");
-      }
-
-      if (err.data.message === "User is not verified") {
-        toast.error("Your account is not verified");
-      router.push(`/verify?email=${data.email}`);
-           router.push("/dashboard");
-      }
-    }
+  if (isSuccess) {
+    router.push("/dashboard");
+  }
   };
 
   return (
@@ -58,8 +53,8 @@ export default function SignInPage() {
         </div>
 
         {/* Form Section */}
-        <form className="space-y-6">
-          {/* Email Address */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* Email */}
           <div className="space-y-2">
             <div className="flex items-center gap-2 ml-1">
               <Mail className="w-3 h-3 text-orange-600" />
@@ -70,8 +65,16 @@ export default function SignInPage() {
             <Input
               type="email"
               placeholder="PLAYER@JERSEY.COM"
+              {...register("email", {
+                required: "Email is required",
+              })}
               className="h-14 px-6 bg-slate-50 dark:bg-slate-900 border-none rounded-2xl font-bold uppercase placeholder:text-slate-300 focus-visible:ring-2 focus-visible:ring-orange-600/50 transition-all shadow-sm"
             />
+            {errors.email && (
+              <p className="text-xs text-red-500 ml-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           {/* Password */}
@@ -87,9 +90,18 @@ export default function SignInPage() {
             <Input
               type="password"
               placeholder="••••••••"
+              {...register("password", {
+                required: "Password is required",
+              })}
               className="h-14 px-6 bg-slate-50 dark:bg-slate-900 border-none rounded-2xl font-bold focus-visible:ring-2 focus-visible:ring-orange-600/50 transition-all shadow-sm"
             />
+            {errors.password && (
+              <p className="text-xs text-red-500 ml-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
+
           <div>
             <Link
               href="/forgot-password"
@@ -99,13 +111,17 @@ export default function SignInPage() {
             </Link>
           </div>
 
-          <ShadButton className="w-full h-16 bg-slate-900 dark:bg-orange-600 hover:bg-orange-700 text-white font-black uppercase tracking-[0.2em] rounded-2xl shadow-2xl shadow-orange-600/20 group transition-all active:scale-95 border-none">
-            Sign In{" "}
+          <ShadButton
+            type="submit"
+            disabled={isLoading}
+            className="w-full h-16 bg-slate-900 dark:bg-orange-600 hover:bg-orange-700 text-white font-black uppercase tracking-[0.2em] rounded-2xl shadow-2xl shadow-orange-600/20 group transition-all active:scale-95 border-none"
+          >
+            {isLoading ? "Signing In..." : "Sign In"}
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </ShadButton>
         </form>
 
-        {/* Bottom Navigation */}
+        {/* Bottom */}
         <div className="pt-8 text-center border-t border-slate-100 dark:border-slate-800">
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-loose">
             New to the club? <br />
