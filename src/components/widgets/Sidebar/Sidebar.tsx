@@ -21,6 +21,7 @@ const items = [
   { title: 'Products', url: '#', icon: Settings },
   { title: 'Payments', url: '#', icon: Settings },
   { title: 'Stocks', url: '#', icon: Settings },
+  { title: 'My Orders', url: '#', icon: Settings },
 ];
 
 export function AppSidebar() {
