@@ -3,18 +3,23 @@
 import { constructQuery } from '@/shared/helpers/constructQuery';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { headerForUser, keys, tableLayout } from './config/constants';
-import { useGetAllUsersQuery } from '@/redux/features/dashboard/user';
+import { useGetAllProductsQuery } from '@/redux/features/dashboard/product';
 import ErrorShow from '@/components/common/Error Show/ErrorShow';
 import HeaderWithFilter from '@/components/common/Header With Filter/HeaderWithFilter';
 import CommonTable from '@/components/common/Common Table/CommonTable';
 import Pagination from '@/components/common/Pagination/Pagination';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+import { Plus, BarChart3 } from 'lucide-react';
+import { headerForStock, keys, tableLayout } from './config/constants';
 
-const UserList = () => {
+const StockList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [limit, setLimit] = useState(50);
   const searchParams = useSearchParams();
+
+  const router = useRouter();
 
   const query = constructQuery({
     searchParams,
@@ -23,20 +28,20 @@ const UserList = () => {
     limit,
   });
   const {
-    data: usersData,
+    data: productsData,
     isLoading,
     isError,
     error,
     isFetching,
-  } = useGetAllUsersQuery({ query });
-  console.log('users', usersData);
+  } = useGetAllProductsQuery({ query });
+  console.log('products', productsData);
   useEffect(() => {
-    if (usersData?.data) {
-      setTotalItems(usersData?.meta?.total);
-      setLimit(usersData?.meta?.limit);
-      setCurrentPage(usersData?.meta?.page);
+    if (productsData?.data) {
+      setTotalItems(productsData?.meta?.total);
+      setLimit(productsData?.meta?.limit);
+      setCurrentPage(productsData?.meta?.page);
     }
-  }, [usersData]);
+  }, [productsData]);
 
   if (isError) {
     return <ErrorShow error={error} />;
@@ -46,22 +51,38 @@ const UserList = () => {
       <div className="shadow-md pt-5 px-5 rounded-md relative">
         <div>
           <HeaderWithFilter
-            name="User List"
-            link={'users/create'}
-            btnName="Create User"
+            name="Stock Management"
+            link={'stocks/update'}
+            btnName="Update Stock"
             isFilter={false}
-            status="role"
+            status="category"
           />
+          <div className="flex gap-4 mb-4">
+            <Button
+              onClick={() => router.push('/dashboard/stocks/update')}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Update Stock
+            </Button>
+            <Button
+              onClick={() => router.push('/dashboard/stocks/history')}
+              variant="outline"
+            >
+              <BarChart3 className="w-4 h-4 mr-2" />
+              View History
+            </Button>
+          </div>
         </div>
         <div>
           <div>
             <CommonTable
               dataLayout={tableLayout}
-              headerData={headerForUser}
-              itemData={usersData?.data}
+              headerData={headerForStock}
+              itemData={productsData?.data}
               loading={isLoading || isFetching}
-              //   editPageLink={'/users/user-edit'}
-              //   link="/users/user-details"
+              editPageLink={'/dashboard/stocks'}
+              link="/dashboard/stocks"
             />
             <div className="absolute bottom-5  left-5 right-5">
               <Pagination
@@ -78,4 +99,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default StockList;

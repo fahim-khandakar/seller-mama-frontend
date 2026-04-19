@@ -184,7 +184,7 @@ const CommonTable: FC<CommonTableProps> = ({
                   {btnLink && (
                     <TableCell>
                       <Link
-                        href={`${btnLink}/${item?.userId || item?.id}`}
+                        href={`${btnLink}/${item?._id || item?.id || item?.userId}`}
                         onClick={(e) => e.stopPropagation()} // stop row click
                       >
                         <Button className="!px-2 text-[10px]  h-5">
@@ -198,7 +198,7 @@ const CommonTable: FC<CommonTableProps> = ({
                       <Button
                         onClick={(e) => {
                           e.stopPropagation(); // stop row click
-                          btnModalFunc(item?.userId || item?.id);
+                          btnModalFunc(item?._id || item?.id || item?.userId);
                         }}
                         size={'icon'}
                         variant={'ghost'}
@@ -213,7 +213,7 @@ const CommonTable: FC<CommonTableProps> = ({
                       <Button
                         onClick={(e) => {
                           e.stopPropagation(); // stop row click
-                          deleteFn(item?.userId || item?.id);
+                          deleteFn(item?._id || item?.id || item?.userId);
                         }}
                         disabled={eval(deleteBtnCondition)}
                         size={'icon'}
@@ -229,7 +229,7 @@ const CommonTable: FC<CommonTableProps> = ({
                     <TableCell>
                       <Link
                         className="text-muted-foreground hover:text-primary flex justify-center items-center"
-                        href={`${link}/${item?.userId || item?.id}`}
+                        href={`${link}/${item?._id || item?.id || item?.userId}`}
                         onClick={(e) => e.stopPropagation()} // stop row click
                       >
                         <Eye className="h-4 w-4" />
@@ -240,7 +240,7 @@ const CommonTable: FC<CommonTableProps> = ({
                     <TableCell>
                       <Link
                         className="text-muted-foreground hover:text-primary flex justify-center items-center my-2"
-                        href={`${editPageLink}/${item?.userId || item?.id}`}
+                        href={`${editPageLink}/${item?._id || item?.id || item?.userId}`}
                         onClick={(e) => e.stopPropagation()} // stop row click
                       >
                         <Edit2 className="h-4 w-4" />

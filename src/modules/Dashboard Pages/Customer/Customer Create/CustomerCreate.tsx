@@ -10,7 +10,15 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { User, Mail, Lock, Phone, MapPin, Image, Shield } from 'lucide-react';
+import {
+  User,
+  Mail,
+  Lock,
+  Phone,
+  MapPin,
+  Image as IconImage,
+  Shield,
+} from 'lucide-react';
 
 type FormData = {
   name: string;
@@ -135,7 +143,10 @@ export default function CustomerCreate() {
             {/* Picture */}
             <div className="space-y-2">
               <div className="flex items-center gap-2 ml-1">
-                <Image className="w-3 h-3 text-orange-600" />
+                <IconImage
+                  className="w-3 h-3 text-orange-600"
+                  aria-hidden="true"
+                />
                 <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
                   Picture URL
                 </Label>

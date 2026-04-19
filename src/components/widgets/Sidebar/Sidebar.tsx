@@ -1,4 +1,12 @@
-import { Calendar, Home, Inbox, Search, Settings } from 'lucide-react';
+import {
+  BarChart3,
+  Users,
+  UserCheck,
+  ShoppingCart,
+  Package,
+  TrendingUp,
+  Settings,
+} from 'lucide-react';
 
 import {
   Sidebar,
@@ -15,14 +23,13 @@ import {
 import Link from 'next/link';
 
 const items = [
-  { title: 'Analytics', url: '#', icon: Home },
-  { title: 'Users', url: '/dashboard/users', icon: Inbox },
-  { title: 'Customers', url: '/dashboard/customers', icon: Calendar },
-  { title: 'Orders', url: '#', icon: Search },
-  { title: 'Products', url: '#', icon: Settings },
-  { title: 'Payments', url: '#', icon: Settings },
-  { title: 'Stocks', url: '#', icon: Settings },
-  { title: 'My Orders', url: '#', icon: Settings },
+  { title: 'Analytics', url: '/dashboard', icon: BarChart3 },
+  { title: 'Users', url: '/dashboard/users', icon: Users },
+  { title: 'Customers', url: '/dashboard/customers', icon: UserCheck },
+  { title: 'Orders', url: '/dashboard/orders', icon: ShoppingCart },
+  { title: 'Products', url: '/dashboard/products', icon: Package },
+  { title: 'Stock Management', url: '/dashboard/stocks', icon: TrendingUp },
+  { title: 'Settings', url: '/dashboard/settings', icon: Settings },
 ];
 
 export function AppSidebar() {
