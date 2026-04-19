@@ -3,25 +3,18 @@
 import { constructQuery } from '@/shared/helpers/constructQuery';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { headerForUser, keys, tableLayout } from './config/constants';
-import { useGetAllUsersQuery } from '@/redux/features/dashboard/user';
+import { headerForCustomer, keys, tableLayout } from './config/constants';
+import { useGetAllCustomersQuery } from '@/redux/features/dashboard/user';
 import ErrorShow from '@/components/common/Error Show/ErrorShow';
 import HeaderWithFilter from '@/components/common/Header With Filter/HeaderWithFilter';
 import CommonTable from '@/components/common/Common Table/CommonTable';
 import Pagination from '@/components/common/Pagination/Pagination';
 
-const UserList = () => {
+const CustomerList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [limit, setLimit] = useState(50);
   const searchParams = useSearchParams();
-  const [id, setId] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-
-  const modalQuery = `startDate=${startDate}&endDate=${endDate}`;
 
   const query = constructQuery({
     searchParams,
@@ -30,25 +23,20 @@ const UserList = () => {
     limit,
   });
   const {
-    data: usersData,
+    data: customersData,
     isLoading,
     isError,
     error,
     isFetching,
-  } = useGetAllUsersQuery({ query });
-  console.log('users', usersData);
+  } = useGetAllCustomersQuery({ query });
+  console.log('customers', customersData);
   useEffect(() => {
-    if (usersData?.data) {
-      setTotalItems(usersData?.meta?.total);
-      setLimit(usersData?.meta?.limit);
-      setCurrentPage(usersData?.meta?.page);
+    if (customersData?.data) {
+      setTotalItems(customersData?.meta?.total);
+      setLimit(customersData?.meta?.limit);
+      setCurrentPage(customersData?.meta?.page);
     }
-  }, [usersData]);
-
-  const handleOpenModal = (id: string) => {
-    setId(id);
-    setIsOpen(true);
-  };
+  }, [customersData]);
 
   if (isError) {
     return <ErrorShow error={error} />;
@@ -58,9 +46,9 @@ const UserList = () => {
       <div className="shadow-md pt-5 px-5 rounded-md relative">
         <div>
           <HeaderWithFilter
-            name="User List"
-            link={'users/create'}
-            btnName="Create User"
+            name="Customer List"
+            link={'customers/create'}
+            btnName="Create Customer"
             isFilter={false}
             status="role"
           />
@@ -69,11 +57,11 @@ const UserList = () => {
           <div>
             <CommonTable
               dataLayout={tableLayout}
-              headerData={headerForUser}
-              itemData={usersData?.data}
+              headerData={headerForCustomer}
+              itemData={customersData?.data}
               loading={isLoading || isFetching}
-              //   editPageLink={'/users/user-edit'}
-              //   link="/users/user-details"
+              //   editPageLink={'/customers/customer-edit'}
+              //   link="/customers/customer-details"
             />
             <div className="absolute bottom-5  left-5 right-5">
               <Pagination
@@ -90,4 +78,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default CustomerList;

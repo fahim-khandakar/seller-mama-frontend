@@ -9,12 +9,21 @@ export const userApi = baseApi.injectEndpoints({
         method: 'POST',
         body: userInfo,
       }),
+      invalidatesTags: ['USER'],
     }),
 
     // 🔹 Get All Users (Admin / Super Admin)
     getAllUsers: builder.query({
       query: () => ({
         url: '/user/all-users',
+        method: 'GET',
+      }),
+      providesTags: ['USER'],
+    }),
+    // 🔹 Get All customers
+    getAllCustomers: builder.query({
+      query: () => ({
+        url: '/user/all-customers',
         method: 'GET',
       }),
       providesTags: ['USER'],
@@ -56,4 +65,5 @@ export const {
   useGetMeQuery,
   useGetSingleUserQuery,
   useUpdateUserMutation,
+  useGetAllCustomersQuery,
 } = userApi;
