@@ -15,13 +15,6 @@ const OrderList = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [limit, setLimit] = useState(50);
   const searchParams = useSearchParams();
-  const [id, setId] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-  const [isOpenModal, setIsOpenModal] = useState(false);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-
-  const modalQuery = `startDate=${startDate}&endDate=${endDate}`;
 
   const query = constructQuery({
     searchParams,
@@ -44,11 +37,6 @@ const OrderList = () => {
       setCurrentPage(ordersData?.meta?.page);
     }
   }, [ordersData]);
-
-  const handleOpenModal = (id: string) => {
-    setId(id);
-    setIsOpen(true);
-  };
 
   if (isError) {
     return <ErrorShow error={error} />;

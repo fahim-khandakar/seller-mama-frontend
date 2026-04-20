@@ -4,10 +4,9 @@ export const analyticsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // 🔹 Get Analytics Summary
     getAnalyticsSummary: builder.query({
-      query: (params) => ({
-        url: '/analytics/summary',
+      query: ({query}) => ({
+        url: `/analytics/summary?${query}`,
         method: 'GET',
-        params,
       }),
       providesTags: ['ANALYTICS'],
     }),

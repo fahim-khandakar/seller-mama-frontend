@@ -66,8 +66,8 @@ export default function ProductCreate() {
   };
 
   return (
-    <div className="shadow-md pt-5 px-5 rounded-md">
-      <Card className="max-w-2xl mx-auto">
+    <div className="shadow-md pt-5  rounded-md">
+      <Card className="border-none">
         <CardHeader>
           <CardTitle className="text-2xl font-black uppercase tracking-tighter text-slate-900 dark:text-white">
             Create <span className="text-orange-600">Product</span>

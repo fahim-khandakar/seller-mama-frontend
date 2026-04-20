@@ -57,22 +57,6 @@ const StockList = () => {
             isFilter={false}
             status="category"
           />
-          <div className="flex gap-4 mb-4">
-            <Button
-              onClick={() => router.push('/dashboard/stocks/update')}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Update Stock
-            </Button>
-            <Button
-              onClick={() => router.push('/dashboard/stocks/history')}
-              variant="outline"
-            >
-              <BarChart3 className="w-4 h-4 mr-2" />
-              View History
-            </Button>
-          </div>
         </div>
         <div>
           <div>

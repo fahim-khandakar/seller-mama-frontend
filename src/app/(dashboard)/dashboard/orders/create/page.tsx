@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { ShoppingCart, User, Phone, MapPin, Plus, Minus } from 'lucide-react';
+import { User, Phone, MapPin, Plus, Minus } from 'lucide-react';
 
 type OrderItem = {
   product: string;
@@ -41,7 +41,6 @@ export default function OrderCreate() {
     handleSubmit,
     register,
     watch,
-    setValue,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
@@ -94,8 +93,8 @@ export default function OrderCreate() {
   };
 
   return (
-    <div className="shadow-md pt-5 px-5 rounded-md">
-      <Card className="max-w-4xl mx-auto">
+    <div className="shadow-md pt-5  rounded-md ">
+      <Card className="border-none">
         <CardHeader>
           <CardTitle className="text-2xl font-black uppercase tracking-tighter text-slate-900 dark:text-white">
             Create <span className="text-orange-600">Order</span>
