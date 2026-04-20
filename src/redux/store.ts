@@ -1,11 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { baseApi } from './baseApi';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import './features/dashboard/auth';
-import './features/dashboard/product';
-import './features/dashboard/order';
-import './features/dashboard/analytics';
-import './features/dashboard/user';
 
 export const store = configureStore({
   reducer: {

@@ -1,15 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+'use client';
 
-import Link from "next/link";
-import { Mail, Lock, ArrowRight, LogIn } from "lucide-react";
-import { Button as ShadButton } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useLoginMutation } from "@/redux/features/auth/auth.api";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { handleResponse } from "@/shared/helpers/handleResponse";
+import Link from 'next/link';
+import { Mail, Lock, ArrowRight, LogIn } from 'lucide-react';
+import { Button as ShadButton } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useLoginMutation } from '@/redux/features/dashboard/auth.api';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+import { handleResponse } from '@/shared/helpers/handleResponse';
 
 type FormValues = {
   email: string;
@@ -28,12 +26,12 @@ export default function SignInPage() {
   const [login, { isLoading }] = useLoginMutation();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    console.log("data", data)
-      const isSuccess = await handleResponse(login(data).unwrap());
+    console.log('data', data);
+    const isSuccess = await handleResponse(login(data).unwrap());
 
-  if (isSuccess) {
-    router.push("/dashboard");
-  }
+    if (isSuccess) {
+      router.push('/dashboard');
+    }
   };
 
   return (
@@ -65,8 +63,8 @@ export default function SignInPage() {
             <Input
               type="email"
               placeholder="PLAYER@JERSEY.COM"
-              {...register("email", {
-                required: "Email is required",
+              {...register('email', {
+                required: 'Email is required',
               })}
               className="h-14 px-6 bg-slate-50 dark:bg-slate-900 border-none rounded-2xl font-bold uppercase placeholder:text-slate-300 focus-visible:ring-2 focus-visible:ring-orange-600/50 transition-all shadow-sm"
             />
@@ -90,8 +88,8 @@ export default function SignInPage() {
             <Input
               type="password"
               placeholder="••••••••"
-              {...register("password", {
-                required: "Password is required",
+              {...register('password', {
+                required: 'Password is required',
               })}
               className="h-14 px-6 bg-slate-50 dark:bg-slate-900 border-none rounded-2xl font-bold focus-visible:ring-2 focus-visible:ring-orange-600/50 transition-all shadow-sm"
             />
@@ -116,7 +114,7 @@ export default function SignInPage() {
             disabled={isLoading}
             className="w-full h-16 bg-slate-900 dark:bg-orange-600 hover:bg-orange-700 text-white font-black uppercase tracking-[0.2em] rounded-2xl shadow-2xl shadow-orange-600/20 group transition-all active:scale-95 border-none"
           >
-            {isLoading ? "Signing In..." : "Sign In"}
+            {isLoading ? 'Signing In...' : 'Sign In'}
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </ShadButton>
         </form>
