@@ -8,9 +8,6 @@ import ErrorShow from '@/components/common/Error Show/ErrorShow';
 import HeaderWithFilter from '@/components/common/Header With Filter/HeaderWithFilter';
 import CommonTable from '@/components/common/Common Table/CommonTable';
 import Pagination from '@/components/common/Pagination/Pagination';
-import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
-import { Plus, BarChart3 } from 'lucide-react';
 import { headerForStock, keys, tableLayout } from './config/constants';
 
 const StockList = () => {
@@ -18,8 +15,6 @@ const StockList = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [limit, setLimit] = useState(50);
   const searchParams = useSearchParams();
-
-  const router = useRouter();
 
   const query = constructQuery({
     searchParams,
@@ -34,7 +29,7 @@ const StockList = () => {
     error,
     isFetching,
   } = useGetAllProductsQuery({ query });
-  console.log('products', productsData);
+
   useEffect(() => {
     if (productsData?.data) {
       setTotalItems(productsData?.meta?.total);

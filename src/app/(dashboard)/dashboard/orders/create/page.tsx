@@ -281,7 +281,7 @@ export default function OrderCreate() {
                 <Input
                   value={`$${finalAmount.toFixed(2)}`}
                   readOnly
-                  className="h-12 px-4 bg-slate-50 dark:bg-slate-900 border-none rounded-xl font-medium font-bold text-green-600"
+                  className="h-12 px-4 bg-slate-50 dark:bg-slate-900 border-none rounded-xl font-medium  text-green-600"
                 />
               </div>
             </div>
