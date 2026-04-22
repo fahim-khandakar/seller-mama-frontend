@@ -12,15 +12,7 @@ export const productApi = baseApi.injectEndpoints({
       invalidatesTags: ['PRODUCT'],
     }),
 
-    // 🔹 Update Product Stock
-    updateProductStock: builder.mutation({
-      query: ({ productId, stockData }) => ({
-        url: `/products/${productId}/stock`,
-        method: 'POST',
-        body: stockData,
-      }),
-      invalidatesTags: ['PRODUCT'],
-    }),
+
 
     // 🔹 Get All Products
     getAllProducts: builder.query({
@@ -40,23 +32,8 @@ export const productApi = baseApi.injectEndpoints({
       providesTags: ['PRODUCT'],
     }),
 
-    // 🔹 Get Product Stock History
-    getProductStockHistory: builder.query({
-      query: (productId: string) => ({
-        url: `/products/${productId}/stock-history`,
-        method: 'GET',
-      }),
-      providesTags: ['PRODUCT'],
-    }),
 
-    // 🔹 Get Product Stock Summary
-    getProductStockSummary: builder.query({
-      query: (productId: string) => ({
-        url: `/products/${productId}/stock-summary`,
-        method: 'GET',
-      }),
-      providesTags: ['PRODUCT'],
-    }),
+
 
     // 🔹 Update Product
     updateProduct: builder.mutation({
@@ -81,11 +58,9 @@ export const productApi = baseApi.injectEndpoints({
 
 export const {
   useCreateProductMutation,
-  useUpdateProductStockMutation,
   useGetAllProductsQuery,
   useGetSingleProductQuery,
-  useGetProductStockHistoryQuery,
-  useGetProductStockSummaryQuery,
+
   useUpdateProductMutation,
   useDeleteProductMutation,
 } = productApi;

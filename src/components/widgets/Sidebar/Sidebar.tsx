@@ -28,7 +28,6 @@ const items = [
   { title: 'Customers', url: '/dashboard/customers', icon: UserCheck },
   { title: 'Orders', url: '/dashboard/orders', icon: ShoppingCart },
   { title: 'Products', url: '/dashboard/products', icon: Package },
-  { title: 'Stock Management', url: '/dashboard/stocks', icon: TrendingUp },
   { title: 'Settings', url: '/dashboard/settings', icon: Settings },
 ];
 
