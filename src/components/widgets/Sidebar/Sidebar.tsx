@@ -4,7 +4,6 @@ import {
   UserCheck,
   ShoppingCart,
   Package,
-  TrendingUp,
   Settings,
 } from 'lucide-react';
 
