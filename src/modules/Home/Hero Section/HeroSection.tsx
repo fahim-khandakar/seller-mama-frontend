@@ -1,10 +1,16 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight, ShoppingBag } from "lucide-react";
-import jersey from "@/assets/jersey.jpg";
+'use client';
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ShoppingBag } from 'lucide-react';
+import jersey from '@/assets/jersey.jpg';
+import { useGetSingleProductQuery } from '@/redux/features/dashboard/product';
 
 export default function HeroSection() {
+  const { data: singleData } = useGetSingleProductQuery(
+    '69f24ed24049b0b4e143af58',
+  );
+  console.log('singleData', singleData);
   return (
     <section className="relative w-full bg-slate-50 overflow-hidden dark:bg-slate-950">
       <div className="container mx-auto px-4 md:px-6 py-16 md:py-24 lg:py-32 flex flex-col-reverse lg:flex-row items-center gap-10">
@@ -34,7 +40,7 @@ export default function HeroSection() {
                 <ShoppingBag className="w-5 h-5" /> Shop Now
               </Button>
             </Link>
-            <Link href="/categories" className="w-full sm:w-auto">
+            {/* <Link href="/categories" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 variant="outline"
@@ -42,7 +48,7 @@ export default function HeroSection() {
               >
                 Explore Teams <ArrowRight className="w-4 h-4" />
               </Button>
-            </Link>
+            </Link> */}
           </div>
 
           {/* Trust Badges / Stats */}
@@ -78,7 +84,7 @@ export default function HeroSection() {
           <div className="relative w-full max-w-md aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl rotate-[-2deg] hover:rotate-0 transition-transform duration-500 border-4 border-white dark:border-slate-800">
             {/* Make sure to put your jersey image in the public folder */}
             <Image
-              src={jersey}
+              src={singleData?.data?.images[0] || jersey}
               alt="Premium Sports Jersey"
               fill
               className="object-cover bg-slate-100 dark:bg-slate-900"
@@ -87,7 +93,9 @@ export default function HeroSection() {
           </div>
 
           {/* Floating Price Tag/Badge for extra flair */}
-          <div className="absolute -bottom-6 -left-2 md:bottom-0 md:-left-10 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl flex items-center gap-4 animate-bounce hover:animate-none border border-slate-100 dark:border-slate-700">
+          <div
+            className={`absolute ${singleData?.data?.string?.length > 30 ? ' -left-2 md:-left-10' : '-left-2 md:left-32'} -bottom-6 md:bottom-0 md:-left-10 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl flex items-center gap-4 animate-bounce hover:animate-none border border-slate-100 dark:border-slate-700`}
+          >
             <div className="bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 p-2 rounded-full">
               <span className="text-xl">🔥</span>
             </div>
@@ -96,7 +104,8 @@ export default function HeroSection() {
                 Trending Now
               </p>
               <p className="text-lg font-extrabold text-slate-900 dark:text-white">
-                Germany 2026 World Cup Player Edition
+                {singleData?.data?.name ||
+                  'Germany 2026 World Cup Player Edition'}
               </p>
             </div>
           </div>
