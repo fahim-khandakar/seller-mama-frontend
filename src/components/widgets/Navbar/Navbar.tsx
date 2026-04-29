@@ -62,7 +62,7 @@ export default function Navbar() {
         <div className="flex items-center justify-center gap-2">
           <Sparkles className="h-4 w-4" />
           <span className="font-medium">
-            Free shipping on orders over $50 • Limited time offer!
+            Player Edition Orders Include FREE Name & Number Customization
           </span>
         </div>
       </div>
