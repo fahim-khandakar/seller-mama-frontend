@@ -1,64 +1,63 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import logo from "@/assets/Seller_Mama_Logo bg remove.png";
+import Link from 'next/link';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import logo from '@/assets/Seller_Mama_Logo bg remove.png';
 import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+} from '@/components/ui/navigation-menu';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import {
   Menu,
   Search,
   ShoppingCart,
   User,
   Heart,
-  Package,
   Shirt,
   Watch,
   Laptop,
   Smartphone,
   Sparkles,
   X,
-} from "lucide-react";
-import { DialogTitle } from "@radix-ui/react-dialog";
-import Image from "next/image";
+} from 'lucide-react';
+import { DialogTitle } from '@radix-ui/react-dialog';
+import Image from 'next/image';
 
 const categories = [
   {
-    title: "Electronics",
-    description: "Latest gadgets and tech",
+    title: 'Electronics',
+    description: 'Latest gadgets and tech',
     items: [
-      { name: "Laptops", icon: Laptop, href: "/category/laptops", tag: "New" },
+      { name: 'Laptops', icon: Laptop, href: '/category/laptops', tag: 'New' },
       {
-        name: "Smartphones",
+        name: 'Smartphones',
         icon: Smartphone,
-        href: "/category/smartphones",
-        tag: "Hot",
+        href: '/category/smartphones',
+        tag: 'Hot',
       },
-      { name: "Smartwatches", icon: Watch, href: "/category/watches" },
+      { name: 'Smartwatches', icon: Watch, href: '/category/watches' },
     ],
   },
   {
-    title: "Fashion",
-    description: "Trending styles for all",
+    title: 'Fashion',
+    description: 'Trending styles for all',
     items: [
-      { name: "Men's Collection", icon: Shirt, href: "/category/mens" },
+      { name: "Men's Collection", icon: Shirt, href: '/category/mens' },
       {
         name: "Women's Collection",
         icon: Shirt,
-        href: "/category/womens",
-        tag: "Sale",
+        href: '/category/womens',
+        tag: 'Sale',
       },
-      { name: "Accessories", icon: Watch, href: "/category/accessories" },
+      { name: 'Accessories', icon: Watch, href: '/category/accessories' },
     ],
   },
 ];
