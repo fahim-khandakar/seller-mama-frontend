@@ -132,18 +132,19 @@ export default function ProductCreate() {
         formData.append('discountPrice', String(data.discountPrice));
       }
 
-      data.description.forEach(({ value }) => {
-        if (value.trim()) {
-          formData.append('description', value);
-        }
-      });
+      const descriptions = data.description
+        .map((d) => d.value.trim())
+        .filter(Boolean);
 
+      descriptions.forEach((desc, index) => {
+        formData.append(`description[${index}]`, desc);
+      });
       imageData.forEach(({ file }) => {
         formData.append('images', file);
       });
 
-      const result = await createProduct(formData).unwrap();
-      console.log('result', result);
+      await createProduct(formData).unwrap();
+
       toast.success('Product created successfully');
       router.push('/dashboard/products');
     } catch (error: any) {
