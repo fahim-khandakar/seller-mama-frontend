@@ -29,7 +29,7 @@ const ProductList = () => {
     error,
     isFetching,
   } = useGetAllProductsQuery({ query });
-  console.log('products', productsData);
+
   useEffect(() => {
     if (productsData?.data) {
       setTotalItems(productsData?.meta?.total);

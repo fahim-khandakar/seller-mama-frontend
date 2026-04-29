@@ -56,8 +56,9 @@ export default function OrderCreate() {
 
   const [createOrder, { isLoading }] = useCreateOrderMutation();
   const router = useRouter();
-  const { data: productsData } = useGetAllProductsQuery({});
 
+  const { data: productsData } = useGetAllProductsQuery({ query: '' });
+  console.log('products', productsData);
   const watchedItems = watch('items');
   const discountAmount = watch('discountAmount');
 
