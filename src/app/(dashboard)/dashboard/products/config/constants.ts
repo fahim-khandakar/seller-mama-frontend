@@ -26,8 +26,8 @@ export const headerForProduct = [
 ];
 export const tableLayout = [
   'item?.name',
-  'item?.type?.category?.mainCategory?.name',
-  'item?.type?.category?.name',
+  'item?.mainCategory?.name',
+  'item?.category?.name',
   'item?.type?.name',
   'item?.basePrice',
   'item?.totalStock',

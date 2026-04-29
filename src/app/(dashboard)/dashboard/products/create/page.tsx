@@ -37,8 +37,9 @@ type DescriptionPoint = {
 
 type ProductFormData = {
   name: string;
-  category: string; // Form string e thakle product category string field er jonno
-  type: string; // Final Product Model e jeta jabe
+  mainCategory: string; // ID pathabo
+  category: string; // ID pathabo
+  type: string; // ID pathabo
   details: string;
   description: DescriptionPoint[];
   basePrice: number;
@@ -47,36 +48,24 @@ type ProductFormData = {
 };
 
 export default function ProductCreate() {
-  // --- Dependency States ---
-  const [selectedMainCategory, setSelectedMainCategory] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-
   const [imageData, setImageData] = useState<
     Array<{ file: File; preview: string }>
   >([]);
   const [createProduct, { isLoading }] = useCreateProductMutation();
   const router = useRouter();
 
-  // --- API Hooks ---
-  const { data: mainCategories } = useGetAllMainCategoriesQuery({});
-  const { data: categories } = useGetAllCategoriesQuery(
-    { mainCategory: selectedMainCategory },
-    { skip: !selectedMainCategory },
-  );
-  const { data: types } = useGetAllTypesQuery(
-    { category: selectedCategory },
-    { skip: !selectedCategory },
-  );
-
   const {
     control,
     register,
     handleSubmit,
+    watch,
     setValue,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<ProductFormData>({
     defaultValues: {
       name: '',
+      mainCategory: '',
+      category: '',
       type: '',
       details: '',
       description: [{ value: '' }],
@@ -85,6 +74,15 @@ export default function ProductCreate() {
     },
   });
 
+  // Watch field values for dependent queries
+  const watchMainCategory = watch('mainCategory');
+  const watchCategory = watch('category');
+
+  // --- API Hooks (Method 2: Dependent Filtering) ---
+  const { data: mainCategories } = useGetAllMainCategoriesQuery({});
+  const { data: categories } = useGetAllCategoriesQuery({});
+  const { data: types } = useGetAllTypesQuery({});
+  console.log('category', categories);
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'description',
@@ -123,7 +121,9 @@ export default function ProductCreate() {
     try {
       const formData = new FormData();
       formData.append('name', data.name);
-      formData.append('type', data.type);
+      formData.append('mainCategory', data.mainCategory); // Sending ID
+      formData.append('category', data.category); // Sending ID
+      formData.append('type', data.type); // Sending ID
       formData.append('details', data.details);
       formData.append('basePrice', String(data.basePrice));
       formData.append('isActive', String(data.isActive));
@@ -132,19 +132,17 @@ export default function ProductCreate() {
         formData.append('discountPrice', String(data.discountPrice));
       }
 
-      const descriptions = data.description
-        .map((d) => d.value.trim())
-        .filter(Boolean);
-
-      descriptions.forEach((desc, index) => {
-        formData.append(`description[${index}]`, desc);
+      data.description.forEach((d, index) => {
+        if (d.value.trim()) {
+          formData.append(`description[${index}]`, d.value.trim());
+        }
       });
+
       imageData.forEach(({ file }) => {
         formData.append('images', file);
       });
 
       await createProduct(formData).unwrap();
-
       toast.success('Product created successfully');
       router.push('/dashboard/products');
     } catch (error: any) {
@@ -187,24 +185,32 @@ export default function ProductCreate() {
                     Main Category
                   </Label>
                 </div>
-                <Select
-                  onValueChange={(val) => {
-                    setSelectedMainCategory(val);
-                    setSelectedCategory(''); // Reset lower levels
-                    setValue('type', '');
-                  }}
-                >
-                  <SelectTrigger className="h-12 bg-slate-50 dark:bg-slate-900 border-none rounded-xl">
-                    <SelectValue placeholder="Select Main Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {mainCategories?.data?.map((item: any) => (
-                      <SelectItem key={item._id} value={item._id}>
-                        {item.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Controller
+                  name="mainCategory"
+                  control={control}
+                  rules={{ required: 'Main Category is required' }}
+                  render={({ field }) => (
+                    <Select
+                      onValueChange={(val) => {
+                        field.onChange(val);
+                        setValue('category', ''); // Reset child
+                        setValue('type', ''); // Reset grandchild
+                      }}
+                      value={field.value}
+                    >
+                      <SelectTrigger className="h-12 bg-slate-50 dark:bg-slate-900 border-none rounded-xl">
+                        <SelectValue placeholder="Select Main Category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {mainCategories?.data?.map((item: any) => (
+                          <SelectItem key={item._id} value={item._id}>
+                            {item.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
               </div>
 
               {/* Category Selection */}
@@ -215,32 +221,35 @@ export default function ProductCreate() {
                     Category
                   </Label>
                 </div>
-                <Select
-                  disabled={!selectedMainCategory}
-                  onValueChange={(val) => {
-                    setSelectedCategory(val);
-                    // Amra form er 'category' field e name ta rakhbo jodi schema te string thake
-                    const catName = categories?.data?.find(
-                      (c: any) => c._id === val,
-                    )?.name;
-                    setValue('category', catName || '');
-                    setValue('type', '');
-                  }}
-                >
-                  <SelectTrigger className="h-12 bg-slate-50 dark:bg-slate-900 border-none rounded-xl">
-                    <SelectValue placeholder="Select Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories?.data?.map((item: any) => (
-                      <SelectItem key={item._id} value={item._id}>
-                        {item.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Controller
+                  name="category"
+                  control={control}
+                  rules={{ required: 'Category is required' }}
+                  render={({ field }) => (
+                    <Select
+                      disabled={!watchMainCategory}
+                      onValueChange={(val) => {
+                        field.onChange(val);
+                        setValue('type', ''); // Reset child
+                      }}
+                      value={field.value}
+                    >
+                      <SelectTrigger className="h-12 bg-slate-50 dark:bg-slate-900 border-none rounded-xl">
+                        <SelectValue placeholder="Select Category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories?.data?.map((item: any) => (
+                          <SelectItem key={item._id} value={item._id}>
+                            {item.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
               </div>
 
-              {/* Type Selection (Final Model Ref) */}
+              {/* Type Selection */}
               <div className="space-y-2">
                 <div className="flex items-center gap-2 ml-1">
                   <Tags className="w-3 h-3 text-orange-600" />
@@ -254,7 +263,7 @@ export default function ProductCreate() {
                   rules={{ required: 'Type is required' }}
                   render={({ field }) => (
                     <Select
-                      disabled={!selectedCategory}
+                      disabled={!watchCategory}
                       onValueChange={field.onChange}
                       value={field.value}
                     >
@@ -271,13 +280,10 @@ export default function ProductCreate() {
                     </Select>
                   )}
                 />
-                {errors.type && (
-                  <p className="text-red-500 text-sm">{errors.type.message}</p>
-                )}
               </div>
 
               {/* Details */}
-              <div className="space-y-2">
+              <div className="space-y-2 md:col-span-2">
                 <div className="flex items-center gap-2 ml-1">
                   <FileText className="w-3 h-3 text-orange-600" />
                   <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
@@ -353,7 +359,7 @@ export default function ProductCreate() {
               </div>
               <div className="space-y-2">
                 <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest ml-1">
-                  Discount Price (optional)
+                  Discount Price
                 </Label>
                 <Input
                   type="number"
@@ -400,26 +406,24 @@ export default function ProductCreate() {
                 onChange={handleImageChange}
                 className="h-12 px-4 bg-slate-50 dark:bg-slate-900 border-none rounded-xl font-medium"
               />
-              {imageData.length > 0 && (
-                <div className="grid grid-cols-3 gap-3">
-                  {imageData.map((img, index) => (
-                    <div key={index} className="relative group">
-                      <img
-                        src={img.preview}
-                        alt="preview"
-                        className="h-24 w-full object-cover rounded-xl border-2 border-transparent group-hover:border-orange-600 transition-all"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeImage(index)}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
-                      >
-                        <X size={12} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <div className="grid grid-cols-3 gap-3">
+                {imageData.map((img, index) => (
+                  <div key={index} className="relative group">
+                    <img
+                      src={img.preview}
+                      alt="preview"
+                      className="h-24 w-full object-cover rounded-xl border-2 border-transparent group-hover:border-orange-600 transition-all"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <Button
