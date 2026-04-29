@@ -15,20 +15,11 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import {
-  Menu,
-  Search,
-  ShoppingCart,
-  User,
-  Heart,
-  Sparkles,
-  X,
-} from 'lucide-react';
+import { Menu, Search, ShoppingCart, Heart, Sparkles, X } from 'lucide-react';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import Image from 'next/image';
 import { useGetAllMainCategoriesQuery } from '@/redux/features/dashboard/mainCategory';
 import { IMainCategory } from '@/types/mainCategory.type';
-import { useGetAllCategoriesQuery } from '@/redux/features/dashboard/category';
 import { ICategory } from '@/types/category.type';
 import { useRouter, useSearchParams } from 'next/navigation';
 
