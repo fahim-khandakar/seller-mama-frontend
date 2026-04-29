@@ -15,6 +15,8 @@ export type ProductFormData = z.infer<typeof productSchema>;
 
 export const headerForProduct = [
   'Name',
+  'Main Category',
+  'Category',
   'Type',
   'Base Price',
   'Stock',
@@ -24,6 +26,8 @@ export const headerForProduct = [
 ];
 export const tableLayout = [
   'item?.name',
+  'item?.type?.category?.mainCategory?.name',
+  'item?.type?.category?.name',
   'item?.type?.name',
   'item?.basePrice',
   'item?.totalStock',
