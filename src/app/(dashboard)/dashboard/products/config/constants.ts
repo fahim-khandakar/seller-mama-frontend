@@ -15,7 +15,7 @@ export type ProductFormData = z.infer<typeof productSchema>;
 
 export const headerForProduct = [
   'Name',
-  'Category',
+  'Type',
   'Base Price',
   'Stock',
   'Status',
@@ -24,7 +24,7 @@ export const headerForProduct = [
 ];
 export const tableLayout = [
   'item?.name',
-  'item?.category',
+  'item?.type?.name',
   'item?.basePrice',
   'item?.totalStock',
   'item?.isActive ? "Active" : "Inactive"',
