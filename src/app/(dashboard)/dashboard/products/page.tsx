@@ -3,12 +3,17 @@
 import { constructQuery } from '@/shared/helpers/constructQuery';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useGetAllProductsQuery } from '@/redux/features/dashboard/product';
+import {
+  useDeleteProductMutation,
+  useGetAllProductsQuery,
+} from '@/redux/features/dashboard/product';
 import ErrorShow from '@/components/common/Error Show/ErrorShow';
 import HeaderWithFilter from '@/components/common/Header With Filter/HeaderWithFilter';
 import CommonTable from '@/components/common/Common Table/CommonTable';
 import Pagination from '@/components/common/Pagination/Pagination';
 import { headerForProduct, keys, tableLayout } from './config/constants';
+import { handleResponse } from '@/shared/helpers/handleResponse';
+import { WarningSwal } from '@/shared/helpers/warningSwal';
 
 const ProductList = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,6 +34,14 @@ const ProductList = () => {
     error,
     isFetching,
   } = useGetAllProductsQuery({ query });
+
+  const [deleteProduct, { isLoading: deleteLoading }] =
+    useDeleteProductMutation();
+
+  const handleDelete = (id: string) => {
+    const result = deleteProduct(id);
+    handleResponse(result);
+  };
 
   useEffect(() => {
     if (productsData?.data) {
@@ -59,9 +72,9 @@ const ProductList = () => {
               dataLayout={tableLayout}
               headerData={headerForProduct}
               itemData={productsData?.data}
-              loading={isLoading || isFetching}
-              editPageLink={'/dashboard/products'}
-              link="/dashboard/products"
+              loading={isLoading || isFetching || deleteLoading}
+              deleteFn={(id: string) => WarningSwal(handleDelete, id)}
+              deleteBtn
             />
             <div className="absolute bottom-5  left-5 right-5">
               <Pagination

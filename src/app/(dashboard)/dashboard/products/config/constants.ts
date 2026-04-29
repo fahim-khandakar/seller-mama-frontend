@@ -20,6 +20,7 @@ export const headerForProduct = [
   'Stock',
   'Status',
   'Created Date',
+  'Delete',
 ];
 export const tableLayout = [
   'item?.name',
