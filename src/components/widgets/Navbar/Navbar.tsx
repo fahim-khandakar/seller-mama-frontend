@@ -21,52 +21,48 @@ import {
   ShoppingCart,
   User,
   Heart,
-  Shirt,
-  Watch,
-  Laptop,
-  Smartphone,
   Sparkles,
   X,
 } from 'lucide-react';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import Image from 'next/image';
+import { useGetAllMainCategoriesQuery } from '@/redux/features/dashboard/mainCategory';
+import { IMainCategory } from '@/types/mainCategory.type';
+import { useGetAllCategoriesQuery } from '@/redux/features/dashboard/category';
+import { ICategory } from '@/types/category.type';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-const categories = [
-  {
-    title: 'Electronics',
-    description: 'Latest gadgets and tech',
-    items: [
-      { name: 'Laptops', icon: Laptop, href: '/category/laptops', tag: 'New' },
-      {
-        name: 'Smartphones',
-        icon: Smartphone,
-        href: '/category/smartphones',
-        tag: 'Hot',
-      },
-      { name: 'Smartwatches', icon: Watch, href: '/category/watches' },
-    ],
-  },
-  {
-    title: 'Fashion',
-    description: 'Trending styles for all',
-    items: [
-      { name: "Men's Collection", icon: Shirt, href: '/category/mens' },
-      {
-        name: "Women's Collection",
-        icon: Shirt,
-        href: '/category/womens',
-        tag: 'Sale',
-      },
-      { name: 'Accessories', icon: Watch, href: '/category/accessories' },
-    ],
-  },
-];
+const titleCategories = {
+  title: 'Jersey',
+  description:
+    'Explore our vibrant collection of jerseys, perfect for sports enthusiasts and fashion-forward individuals alike.',
+};
 
 export default function Navbar() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [value, setValue] = useState('');
+
   const [cartCount] = useState(3);
   const [wishlistCount] = useState(5);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+
+  const { data: mainCategories } = useGetAllMainCategoriesQuery({});
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      const params = new URLSearchParams(searchParams.toString());
+
+      if (value.trim()) {
+        params.set('searchTerm', value.trim());
+      } else {
+        params.delete('searchTerm');
+      }
+
+      router.push(`/shop?${params.toString()}`);
+    }
+  };
 
   return (
     <>
@@ -138,56 +134,56 @@ export default function Navbar() {
                         <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
                           Shop by Category
                         </p>
-                        {categories.map((category) => (
-                          <div key={category.title} className="space-y-3">
-                            <div>
-                              <p className="font-semibold text-gray-900">
-                                {category.title}
-                              </p>
-                              <p className="text-sm text-gray-500">
-                                {category.description}
-                              </p>
-                            </div>
-                            <div className="ml-3 space-y-2 border-l-2 border-orange-100 pl-4">
-                              {category.items.map((item) => {
-                                const Icon = item.icon;
+
+                        <div key={titleCategories.title} className="space-y-3">
+                          <div>
+                            <p className="font-semibold text-gray-900">
+                              {titleCategories.title}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                              {titleCategories.description}
+                            </p>
+                          </div>
+                          <div className="ml-3 space-y-2 border-l-2 border-orange-100 pl-4">
+                            {mainCategories?.data.map(
+                              (category: IMainCategory) => {
                                 return (
                                   <Link
-                                    key={item.name}
-                                    href={item.href}
+                                    key={category.name}
+                                    href={`/shop?mainCategory=${category.slug}`}
                                     className="flex items-center justify-between gap-2 py-1 text-sm text-gray-700 hover:text-orange-500"
                                     onClick={() => setMobileMenuOpen(false)}
                                   >
                                     <div className="flex items-center gap-2">
-                                      <Icon className="h-4 w-4" />
-                                      {item.name}
+                                      {category.name}
                                     </div>
-                                    {item.tag && (
+                                    {category.createdAt && (
                                       <Badge
                                         variant="secondary"
                                         className="bg-orange-100 text-orange-700 text-xs"
                                       >
-                                        {item.tag}
+                                        {category?.createdAt >=
+                                          '2026-04-01T00:00:00.000Z' && 'New'}
                                       </Badge>
                                     )}
                                   </Link>
                                 );
-                              })}
-                            </div>
+                              },
+                            )}
                           </div>
-                        ))}
+                        </div>
                       </div>
 
                       <Separator />
 
-                      <Link
+                      {/* <Link
                         href="/deals"
                         className="flex items-center gap-2 text-base font-semibold text-orange-500"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         <Sparkles className="h-4 w-4" />
                         Special Deals
-                      </Link>
+                      </Link> */}
 
                       <div className="space-y-3">
                         <Link
@@ -209,7 +205,7 @@ export default function Navbar() {
                   </nav>
 
                   {/* Mobile menu footer */}
-                  <div className="border-t px-6 py-4">
+                  {/* <div className="border-t px-6 py-4">
                     <div className="flex gap-2">
                       <Button className="flex-1 bg-orange-500 hover:bg-orange-600">
                         <User className="mr-2 h-4 w-4" />
@@ -219,7 +215,7 @@ export default function Navbar() {
                         Register
                       </Button>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </SheetContent>
             </Sheet>
@@ -264,51 +260,47 @@ export default function Navbar() {
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <div className="w-[700px] p-6 border-none">
-                      <div className="grid gap-6 md:grid-cols-2">
-                        {categories.map((category) => (
-                          <div key={category.title} className="space-y-4">
-                            <div className="space-y-1">
-                              <h4 className="text-base font-bold text-gray-900">
-                                {category.title}
-                              </h4>
-                              <p className="text-sm text-gray-500">
-                                {category.description}
-                              </p>
-                            </div>
-                            <div className="space-y-1">
-                              {category.items.map((item) => {
-                                const Icon = item.icon;
-                                return (
-                                  <Link
-                                    key={item.name}
-                                    href={item.href}
-                                    className="group flex items-center justify-between rounded-lg p-3 transition-all hover:bg-orange-50"
-                                  >
-                                    <div className="flex items-center gap-3">
-                                      <div className="rounded-lg bg-orange-100 p-2 text-orange-600 transition-colors group-hover:bg-orange-500 group-hover:text-white">
-                                        <Icon className="h-5 w-5" />
-                                      </div>
-                                      <span className="text-sm font-medium text-gray-700 group-hover:text-orange-600">
-                                        {item.name}
-                                      </span>
-                                    </div>
-                                    {item.tag && (
-                                      <Badge className="bg-orange-500 text-xs">
-                                        {item.tag}
-                                      </Badge>
-                                    )}
-                                  </Link>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        ))}
+                      <div className="space-y-1">
+                        <h4 className="text-base font-bold text-gray-900">
+                          {titleCategories.title}
+                        </h4>
+                        <p className="text-sm text-gray-500">
+                          {titleCategories.description}
+                        </p>
+                      </div>
+                      <div
+                        key={titleCategories.title}
+                        className="space-y-2 grid gap-2 grid-cols-2 mt-5"
+                      >
+                        {mainCategories?.data.map((category: ICategory) => {
+                          return (
+                            <Link
+                              key={category.name}
+                              href={`/shop?category=${category.slug}`}
+                              className="flex items-center  gap-2 py-1 text-sm text-gray-700 hover:text-orange-500"
+                              onClick={() => setMobileMenuOpen(false)}
+                            >
+                              <div className="flex items-center gap-2">
+                                {category.name}
+                              </div>
+                              {category.createdAt && (
+                                <Badge
+                                  variant="secondary"
+                                  className="bg-orange-100 text-orange-700 text-xs"
+                                >
+                                  {category?.createdAt >=
+                                    '2026-04-01T00:00:00.000Z' && 'New'}
+                                </Badge>
+                              )}
+                            </Link>
+                          );
+                        })}
                       </div>
                     </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
-                <NavigationMenuItem>
+                {/* <NavigationMenuItem>
                   <Link
                     href="/deals"
                     className="group inline-flex h-10 w-max items-center justify-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-orange-600 transition-all hover:bg-orange-50"
@@ -316,7 +308,7 @@ export default function Navbar() {
                     <Sparkles className="h-4 w-4" />
                     Deals
                   </Link>
-                </NavigationMenuItem>
+                </NavigationMenuItem> */}
 
                 <NavigationMenuItem>
                   <Link
@@ -345,6 +337,9 @@ export default function Navbar() {
                 <Input
                   type="search"
                   placeholder="Search for products..."
+                  value={value}
+                  onChange={(e) => setValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   className="w-full rounded-full border-gray-200 bg-gray-50 pl-11 pr-4 transition-all focus:bg-white focus:shadow-md"
                 />
               </div>
@@ -379,11 +374,11 @@ export default function Navbar() {
               </Link>
 
               {/* User account */}
-              <Link href="/account">
+              {/* <Link href="/account">
                 <Button variant="ghost" size="icon" className="hidden sm:flex">
                   <User className="h-5 w-5" />
                 </Button>
-              </Link>
+              </Link> */}
 
               {/* Cart */}
               <Link href="/cart">
@@ -413,6 +408,9 @@ export default function Navbar() {
                   placeholder="Search products..."
                   className="w-full rounded-full pl-10 pr-4"
                   autoFocus
+                  value={value}
+                  onChange={(e) => setValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
                 />
               </div>
             </div>
