@@ -27,6 +27,7 @@ type DescriptionPoint = {
 type ProductFormData = {
   name: string;
   category: string;
+  details: string;
   description: DescriptionPoint[];
   basePrice: number;
   discountPrice?: number;
@@ -49,6 +50,7 @@ export default function ProductCreate() {
     defaultValues: {
       name: '',
       category: '',
+      details: '',
       description: [{ value: '' }],
       basePrice: 0,
       isActive: true,
@@ -96,6 +98,7 @@ export default function ProductCreate() {
       // Append basic fields
       formData.append('name', data.name);
       formData.append('category', data.category);
+      formData.append('details', data.details);
       formData.append('basePrice', String(data.basePrice));
       formData.append('isActive', String(data.isActive));
 
@@ -174,6 +177,26 @@ export default function ProductCreate() {
                 {errors.category && (
                   <p className="text-red-500 text-sm">
                     {errors.category.message}
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 ml-1">
+                  <Tags className="w-3 h-3 text-orange-600" />
+                  <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
+                    Details
+                  </Label>
+                </div>
+                <Input
+                  {...register('details', {
+                    required: 'Details is required',
+                  })}
+                  placeholder="Enter category"
+                  className="h-12 px-4 bg-slate-50 dark:bg-slate-900 border-none rounded-xl font-medium placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-orange-600/50"
+                />
+                {errors.details && (
+                  <p className="text-red-500 text-sm">
+                    {errors.details.message}
                   </p>
                 )}
               </div>
