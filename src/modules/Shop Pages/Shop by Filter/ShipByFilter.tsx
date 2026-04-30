@@ -1,28 +1,33 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Filter, ChevronDown } from "lucide-react";
+import { useState } from 'react';
+import { Filter, ChevronDown } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
-import { Separator } from "@/components/ui/separator";
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Slider } from '@/components/ui/slider';
+import { Separator } from '@/components/ui/separator';
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import CustomCard from "@/components/common/Custom Card/CustomCard";
-import { products } from "@/shared/constants";
+} from '@/components/ui/sheet';
+import CustomCard from '@/components/common/Custom Card/CustomCard';
+import { products } from '@/shared/constants';
+import { useGetAllProductsQuery } from '@/redux/features/dashboard/product';
+import { IProduct } from '@/types/product.type';
 
 // Sample Data
-const categories = ["Club Jerseys", "National Teams", "Retro", "Training"];
-const leagues = ["Premier League", "La Liga", "Serie A", "Ligue 1"];
+const categories = ['Club Jerseys', 'National Teams', 'Retro', 'Training'];
+const leagues = ['Premier League', 'La Liga', 'Serie A', 'Ligue 1'];
 
 export default function ShopByFilterPage() {
   const [priceRange, setPriceRange] = useState([500, 2000]);
+  const query = '';
+  const { data: productsData } = useGetAllProductsQuery({ query });
+  console.log('products', productsData);
 
   const FilterSidebar = () => (
     <div className="space-y-8">
@@ -146,7 +151,7 @@ export default function ShopByFilterPage() {
           {/* Product Grid */}
           <div className="flex-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {products.map((product, index) => (
+              {productsData?.data?.map((product: IProduct, index: number) => (
                 <CustomCard product={product} key={index} />
               ))}
             </div>
