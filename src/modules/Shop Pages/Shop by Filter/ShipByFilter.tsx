@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Filter, ChevronDown } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -18,16 +18,98 @@ import CustomCard from '@/components/common/Custom Card/CustomCard';
 import { products } from '@/shared/constants';
 import { useGetAllProductsQuery } from '@/redux/features/dashboard/product';
 import { IProduct } from '@/types/product.type';
-
-// Sample Data
-const categories = ['Club Jerseys', 'National Teams', 'Retro', 'Training'];
-const leagues = ['Premier League', 'La Liga', 'Serie A', 'Ligue 1'];
+import { constructQuery } from '@/shared/helpers/constructQuery';
+import { useRouter, useSearchParams } from 'next/navigation';
+import ErrorShow from '@/components/common/Error Show/ErrorShow';
+import { keys } from './config/constants';
+import { useGetAllMainCategoriesQuery } from '@/redux/features/dashboard/mainCategory';
+import { IMainCategory } from '@/types/mainCategory.type';
+import { useGetAllCategoriesQuery } from '@/redux/features/dashboard/category';
+import { ICategory } from '@/types/category.type';
+import { useGetAllTypesQuery } from '@/redux/features/dashboard/type';
+import { IType } from '@/types/type.type';
 
 export default function ShopByFilterPage() {
+  const router = useRouter();
   const [priceRange, setPriceRange] = useState([500, 2000]);
-  const query = '';
-  const { data: productsData } = useGetAllProductsQuery({ query });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [limit, setLimit] = useState(50);
+  const searchParams = useSearchParams();
+
+  const query = constructQuery({
+    searchParams,
+    keys,
+    page: currentPage,
+    limit,
+  });
+
+  const {
+    data: productsData,
+    isError,
+    error,
+  } = useGetAllProductsQuery({ query });
   console.log('products', productsData);
+  const { data: mainCategoriesData } = useGetAllMainCategoriesQuery({});
+  const { data: categoriesData } = useGetAllCategoriesQuery({});
+  const { data: typesData } = useGetAllTypesQuery({});
+
+  useEffect(() => {
+    if (productsData?.data) {
+      setTotalItems(productsData?.meta?.total);
+      setLimit(productsData?.meta?.limit);
+      setCurrentPage(productsData?.meta?.page);
+    }
+  }, [productsData]);
+
+  const handleMainCategoryChange = (slug: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    const selectedCategory = searchParams.get('mainCategory');
+
+    if (selectedCategory === slug) {
+      // if same checkbox clicked again → unselect
+      params.delete('mainCategory');
+    } else {
+      // otherwise replace with new one
+      params.set('mainCategory', slug);
+    }
+
+    router.push(`?${params.toString()}`);
+  };
+
+  const handleCategoryChange = (slug: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    const selectedCategory = searchParams.get('category');
+
+    if (selectedCategory === slug) {
+      // if same checkbox clicked again → unselect
+      params.delete('category');
+    } else {
+      // otherwise replace with new one
+      params.set('category', slug);
+    }
+
+    router.push(`?${params.toString()}`);
+  };
+
+  const handleTypeChange = (slug: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    const selectedType = searchParams.get('type');
+
+    if (selectedType === slug) {
+      // if same checkbox clicked again → unselect
+      params.delete('type');
+    } else {
+      // otherwise replace with new one
+      params.set('type', slug);
+    }
+
+    router.push(`?${params.toString()}`);
+  };
+
+  if (isError) {
+    return <ErrorShow error={error} />;
+  }
 
   const FilterSidebar = () => (
     <div className="space-y-8">
@@ -37,39 +119,85 @@ export default function ShopByFilterPage() {
           Categories
         </h3>
         <div className="space-y-3">
-          {categories.map((cat) => (
-            <div key={cat} className="flex items-center space-x-2">
-              <Checkbox id={cat} />
-              <label
-                htmlFor={cat}
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-              >
-                {cat}
-              </label>
-            </div>
-          ))}
+          {mainCategoriesData?.data?.map((cat: IMainCategory) => {
+            const selectedCategory = searchParams.get('mainCategory');
+
+            return (
+              <div key={cat._id} className="flex items-center space-x-2">
+                <Checkbox
+                  id={cat.slug}
+                  checked={selectedCategory === cat.slug}
+                  onCheckedChange={() => handleMainCategoryChange(cat.slug)}
+                  className="h-4 w-4"
+                />
+                <label
+                  htmlFor={cat.slug}
+                  className="text-sm font-medium cursor-pointer"
+                >
+                  {cat.name}
+                </label>
+              </div>
+            );
+          })}
         </div>
       </div>
 
       <Separator className="bg-slate-100 dark:bg-slate-800" />
 
-      {/* Leagues */}
+      {/* category */}
       <div>
         <h3 className="text-sm font-black uppercase tracking-widest mb-4">
-          Leagues
+          Sub Categories
         </h3>
         <div className="space-y-3">
-          {leagues.map((league) => (
-            <div key={league} className="flex items-center space-x-2">
-              <Checkbox id={league} />
-              <label
-                htmlFor={league}
-                className="text-sm font-medium leading-none cursor-pointer"
-              >
-                {league}
-              </label>
-            </div>
-          ))}
+          {categoriesData?.data?.map((cat: ICategory) => {
+            const selectedCategory = searchParams.get('category');
+
+            return (
+              <div key={cat._id} className="flex items-center space-x-2">
+                <Checkbox
+                  id={cat.slug}
+                  checked={selectedCategory === cat.slug}
+                  onCheckedChange={() => handleCategoryChange(cat.slug)}
+                  className="h-4 w-4"
+                />
+                <label
+                  htmlFor={cat.slug}
+                  className="text-sm font-medium cursor-pointer"
+                >
+                  {cat.name}
+                </label>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      {/* Types */}
+      <div>
+        <h3 className="text-sm font-black uppercase tracking-widest mb-4">
+          Types
+        </h3>
+        <div className="space-y-3">
+          {typesData?.data?.map((type: IType) => {
+            const selectedType = searchParams.get('type');
+
+            return (
+              <div key={type._id} className="flex items-center space-x-2">
+                <Checkbox
+                  id={type.slug}
+                  checked={selectedType === type.slug}
+                  onCheckedChange={() => handleTypeChange(type.slug)}
+                  className="h-4 w-4"
+                />
+                <label
+                  htmlFor={type.slug}
+                  className="text-sm font-medium cursor-pointer"
+                >
+                  {type.name}
+                </label>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -106,7 +234,7 @@ export default function ShopByFilterPage() {
               All <span className="text-orange-500">Jerseys</span>
             </h1>
             <p className="text-slate-500 text-sm mt-2">
-              Showing {products.length} items for you
+              Showing {totalItems} items for you
             </p>
           </div>
 

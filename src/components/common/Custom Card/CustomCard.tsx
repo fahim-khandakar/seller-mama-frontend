@@ -60,7 +60,7 @@ export default function CustomCard({ product }: { product: IProduct }) {
 
         {/* Title */}
         <h3 className="font-bold text-lg text-slate-900 dark:text-white line-clamp-1 group-hover:text-orange-600 transition-colors">
-          {product.name}
+          {`${product?.name} (${product?.category?.name})`}
         </h3>
 
         {/* Price */}

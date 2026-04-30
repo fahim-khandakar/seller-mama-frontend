@@ -51,7 +51,21 @@ export default function Navbar() {
         params.delete('searchTerm');
       }
 
-      router.push(`/shop?${params.toString()}`);
+      const queryString = params.toString();
+      router.push(queryString ? `/shop?${queryString}` : '/shop');
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setValue(newValue);
+
+    if (newValue.trim() === '') {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete('searchTerm');
+
+      const queryString = params.toString();
+      router.push(queryString ? `/shop?${queryString}` : '/shop');
     }
   };
 
@@ -329,7 +343,7 @@ export default function Navbar() {
                   type="search"
                   placeholder="Search for products..."
                   value={value}
-                  onChange={(e) => setValue(e.target.value)}
+                  onChange={handleChange}
                   onKeyDown={handleKeyDown}
                   className="w-full rounded-full border-gray-200 bg-gray-50 pl-11 pr-4 transition-all focus:bg-white focus:shadow-md"
                 />
@@ -400,7 +414,7 @@ export default function Navbar() {
                   className="w-full rounded-full pl-10 pr-4"
                   autoFocus
                   value={value}
-                  onChange={(e) => setValue(e.target.value)}
+                  onChange={handleChange}
                   onKeyDown={handleKeyDown}
                 />
               </div>

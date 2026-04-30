@@ -5,12 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { categories } from './config/constants';
-import { useGetAllMainCategoriesQuery } from '@/redux/features/dashboard/mainCategory';
 
 export default function FeaturedCategoriesSection() {
-  const query = 'limit=4';
-  const { data: mainCategories } = useGetAllMainCategoriesQuery(query);
-  console.log('mainCategories', mainCategories);
   return (
     <section className="w-full bg-slate-50 dark:bg-slate-950 py-12 md:py-24">
       <div className="container mx-auto px-4 ">
