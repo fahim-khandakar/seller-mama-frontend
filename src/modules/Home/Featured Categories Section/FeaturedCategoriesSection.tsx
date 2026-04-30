@@ -1,12 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import { categories } from "./config/constants";
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowUpRight } from 'lucide-react';
+import { categories } from './config/constants';
+import { useGetAllMainCategoriesQuery } from '@/redux/features/dashboard/mainCategory';
 
 export default function FeaturedCategoriesSection() {
+  const query = 'limit=4';
+  const { data: mainCategories } = useGetAllMainCategoriesQuery(query);
+  console.log('mainCategories', mainCategories);
   return (
     <section className="w-full bg-slate-50 dark:bg-slate-950 py-12 md:py-24">
       <div className="container mx-auto px-4 ">
@@ -27,7 +31,7 @@ export default function FeaturedCategoriesSection() {
             href="/shop"
             className="group/link inline-flex  gap-2 bg-orange-600 px-8 py-4 rounded-full text-white font-black uppercase text-[10px] tracking-[0.2em] hover:scale-105 transition-all shadow-xl shadow-orange-500/20 "
           >
-            All Categories{" "}
+            All Categories{' '}
             <ArrowUpRight className="w-4 h-4 group-hover/link:rotate-45 transition-transform" />
           </Link>
         </div>
