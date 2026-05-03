@@ -1,5 +1,5 @@
-import JerseyDetails from "@/modules/Shop Pages/Jersey Details/jerseyDetails";
-import React from "react";
+import JerseyDetails from '@/modules/Shop Pages/Jersey Details/jerseyDetails';
+import React from 'react';
 
 export default function page() {
   return (

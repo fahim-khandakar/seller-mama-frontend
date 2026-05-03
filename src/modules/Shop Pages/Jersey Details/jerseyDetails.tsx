@@ -29,7 +29,9 @@ export default function JerseyDetails() {
   const [mainImage, setMainImage] = useState('');
   const [selectedSize, setSelectedSize] = useState('M');
   const [quantity, setQuantity] = useState(1);
-  const { data: singleProduct } = useGetSingleProductQuery(slug as string);
+  const { data: singleProduct, isLoading } = useGetSingleProductQuery(
+    slug as string,
+  );
   console.log('data', singleProduct);
 
   return (
@@ -40,13 +42,15 @@ export default function JerseyDetails() {
           <div className="space-y-6">
             {/* Big Main Image */}
             <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden bg-slate-100 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl">
-              <Image
-                src={singleProduct?.data?.images[0]} // State theke ashche
-                alt="Main Product Image"
-                fill
-                className="object-cover transition-all duration-500 ease-in-out"
-                priority
-              />
+              {singleProduct?.data?.images?.[0] && (
+                <Image
+                  src={singleProduct.data.images[0]}
+                  alt="Main Product Image"
+                  fill
+                  className="object-cover transition-all duration-500 ease-in-out"
+                  priority
+                />
+              )}
               {/* <Badge className="absolute top-6 left-6 bg-orange-600 px-4 py-1.5 text-xs font-black uppercase tracking-widest shadow-lg">
                 Best Sales
               </Badge> */}

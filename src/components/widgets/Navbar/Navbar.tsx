@@ -281,7 +281,7 @@ export default function Navbar() {
                           return (
                             <Link
                               key={category.name}
-                              href={`/shop?category=${category.slug}`}
+                              href={`/shop?mainCategory=${category.slug}`}
                               className="flex items-center  gap-2 py-1 text-sm text-gray-700 hover:text-orange-500"
                               onClick={() => setMobileMenuOpen(false)}
                             >
