@@ -22,3 +22,11 @@ export interface IProduct {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface ICartItem {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  quantity: number;
+}

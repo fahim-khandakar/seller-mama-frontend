@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Image from "next/image";
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import {
   Trash2,
   Plus,
@@ -9,17 +9,42 @@ import {
   ChevronLeft,
   ArrowRight,
   ShoppingBag,
-} from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+} from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 
 // Assets
-import germany from "@/assets/jersey.jpg";
+import { ICartItem } from '@/types/product.type';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import {
+  removeFromCart,
+  updateQuantity,
+} from '@/redux/features/slice/cart/cartSlice';
 
 export default function CartPage() {
-  const [quantity, setQuantity] = useState(1);
+  const dispatch = useAppDispatch();
+  const cart = useAppSelector((state) => state.cart.cart);
 
+  const handleUpdateQuantity = (id: string, newQuantity: number) => {
+    if (newQuantity < 1) return;
+
+    dispatch(updateQuantity({ id, quantity: newQuantity }));
+  };
+
+  const handleRemove = (id: string) => {
+    dispatch(removeFromCart(id));
+  };
+
+  const subtotal = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0,
+  );
+
+  const shipping = 0;
+  const total = subtotal + shipping;
+
+  console.log('cart', cart);
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 pt-28 pb-20 font-sans">
       <div className="container mx-auto px-4 max-w-5xl">
@@ -40,49 +65,63 @@ export default function CartPage() {
           {/* Left: Cart Items (7 Columns) */}
           <div className="lg:col-span-7 space-y-6">
             {/* Item Card */}
-            <div className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800">
-              <div className="relative h-28 w-24 rounded-2xl overflow-hidden flex-shrink-0 border border-slate-200">
-                <Image
-                  src={germany}
-                  alt="Jersey"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-
-              <div className="flex-1 space-y-1">
-                <h3 className="font-black uppercase text-sm md:text-md tracking-tight">
-                  Germany 24/25 Home
-                </h3>
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                  Size: XL
-                </p>
-                <p className="text-orange-600 font-black text-lg">৳1,250</p>
-
-                {/* Quantity Controls */}
-                <div className="flex items-center gap-3 mt-2">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="h-8 w-8 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-200 transition-colors"
-                  >
-                    <Minus className="w-3 h-3" />
-                  </button>
-                  <span className="font-black text-sm w-4 text-center">
-                    {quantity}
-                  </span>
-                  <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="h-8 w-8 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-200 transition-colors"
-                  >
-                    <Plus className="w-3 h-3" />
-                  </button>
+            {cart?.map((cart: ICartItem, index: number) => (
+              <div
+                key={index}
+                className="flex items-center gap-4 p-4 bg-slate-50 dark:bg-slate-900 rounded-[2rem] border border-slate-100 dark:border-slate-800"
+              >
+                <div className="relative h-28 w-24 rounded-2xl overflow-hidden flex-shrink-0 border border-slate-200">
+                  <Image
+                    src={cart?.image ? cart.image : ''}
+                    alt="Jersey"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-              </div>
 
-              <button className="p-3 text-slate-300 hover:text-red-500 transition-colors">
-                <Trash2 className="w-5 h-5" />
-              </button>
-            </div>
+                <div className="flex-1 space-y-1">
+                  <h3 className="font-black uppercase text-sm md:text-md tracking-tight">
+                    {cart.name}
+                  </h3>
+                  {/* <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Size: XL
+                  </p> */}
+                  <p className="text-orange-600 font-black text-lg">
+                    ৳{cart?.price}
+                  </p>
+
+                  {/* Quantity Controls */}
+                  <div className="flex items-center gap-3 mt-2">
+                    <button
+                      onClick={() => {
+                        handleUpdateQuantity(cart.id, cart?.quantity - 1);
+                      }}
+                      className="h-8 w-8 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-200 transition-colors"
+                    >
+                      <Minus className="w-3 h-3" />
+                    </button>
+                    <span className="font-black text-sm w-4 text-center">
+                      {cart?.quantity}
+                    </span>
+                    <button
+                      onClick={() => {
+                        handleUpdateQuantity(cart.id, cart?.quantity + 1);
+                      }}
+                      className="h-8 w-8 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-200 transition-colors"
+                    >
+                      <Plus className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => handleRemove(cart.id)}
+                  className="p-3 text-slate-300 hover:text-red-500 transition-colors"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              </div>
+            ))}
 
             <Link
               href="/shop"
@@ -102,7 +141,7 @@ export default function CartPage() {
               <div className="space-y-4 font-bold text-sm uppercase tracking-widest opacity-80">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>৳{1250 * quantity}</span>
+                  <span>৳{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
@@ -114,12 +153,12 @@ export default function CartPage() {
 
               <div className="flex justify-between text-2xl font-black uppercase italic tracking-tighter mb-8">
                 <span>Total</span>
-                <span className="text-orange-500">৳{1250 * quantity}</span>
+                <span className="text-orange-500">৳{total.toFixed(2)}</span>
               </div>
 
               <Link href="/checkout">
                 <Button className="w-full h-16 bg-orange-600 hover:bg-orange-700 text-white font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-orange-600/20 text-md group">
-                  Go to Checkout{" "}
+                  Go to Checkout{' '}
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>

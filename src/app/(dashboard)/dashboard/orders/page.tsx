@@ -29,7 +29,7 @@ const OrderList = () => {
     error,
     isFetching,
   } = useGetAllOrdersQuery({ query });
-  console.log('orders', ordersData);
+
   useEffect(() => {
     if (ordersData?.data) {
       setTotalItems(ordersData?.meta?.total);

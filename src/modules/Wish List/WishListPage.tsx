@@ -1,46 +1,48 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Image from "next/image";
+import { useState } from 'react';
+import Image from 'next/image';
 import {
   Trash2,
   ShoppingCart,
   Heart,
   ChevronLeft,
   ArrowRight,
-} from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+} from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 
 // Assets
-import germany from "@/assets/jersey.jpg";
-import argentina from "@/assets/argentina.jpg";
-import { products } from "@/shared/constants";
-import CustomCard from "@/components/common/Custom Card/CustomCard";
+import germany from '@/assets/jersey.jpg';
+import argentina from '@/assets/argentina.jpg';
+import CustomCard from '@/components/common/Custom Card/CustomCard';
+import { useGetAllProductsQuery } from '@/redux/features/dashboard/product';
+import { IProduct } from '@/types/product.type';
 
 const initialWishlist = [
   {
     id: 1,
-    name: "Germany 24/25 Home",
+    name: 'Germany 24/25 Home',
     price: 1250,
     image: germany,
-    size: "XL",
+    size: 'XL',
     stock: true,
   },
   {
     id: 2,
-    name: "Argentina Three Star Edition",
+    name: 'Argentina Three Star Edition',
     price: 1350,
     image: argentina,
-    size: "M",
+    size: 'M',
     stock: true,
   },
 ];
 
 export default function WishlistPage() {
   const [items, setItems] = useState(initialWishlist);
+  const { data: productsData } = useGetAllProductsQuery({ query: 'limit=4' });
 
   const removeItem = (id: number) => {
     setItems(items.filter((item) => item.id !== id));
@@ -166,7 +168,7 @@ export default function WishlistPage() {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {products.map((product, index) => (
+              {productsData?.data?.map((product: IProduct, index: number) => (
                 <CustomCard product={product} key={index} />
               ))}
             </div>

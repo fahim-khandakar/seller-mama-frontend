@@ -15,13 +15,14 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Menu, Search, ShoppingCart, Heart, Sparkles, X } from 'lucide-react';
-import { DialogTitle } from '@radix-ui/react-dialog';
+import { Menu, Search, ShoppingCart, Sparkles, X } from 'lucide-react';
 import Image from 'next/image';
 import { useGetAllMainCategoriesQuery } from '@/redux/features/dashboard/mainCategory';
 import { IMainCategory } from '@/types/mainCategory.type';
 import { ICategory } from '@/types/category.type';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { DialogTitle } from '@/components/ui/dialog';
+import { useAppSelector } from '@/redux/hook';
 
 const titleCategories = {
   title: 'Jersey',
@@ -34,11 +35,12 @@ export default function Navbar() {
   const searchParams = useSearchParams();
   const [value, setValue] = useState('');
 
-  const [cartCount] = useState(3);
-  const [wishlistCount] = useState(5);
+  // const [wishlistCount] = useState(5);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-
+ const cart = useAppSelector((state) => state.cart.cart);
+ const totalItems = cart.length;
+  console.log('totalItems', totalItems);
   const { data: mainCategories } = useGetAllMainCategoriesQuery({});
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -133,6 +135,13 @@ export default function Navbar() {
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Home
+                      </Link>
+                      <Link
+                        href="/shop"
+                        className="block text-base font-semibold text-gray-900 hover:text-orange-500"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Shop
                       </Link>
 
                       <div className="space-y-4">
@@ -317,6 +326,14 @@ export default function Navbar() {
 
                 <NavigationMenuItem>
                   <Link
+                    href="/shop"
+                    className="group inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all hover:bg-orange-50 hover:text-orange-600"
+                  >
+                    Shop
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link
                     href="/about"
                     className="group inline-flex h-10 w-max items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all hover:bg-orange-50 hover:text-orange-600"
                   >
@@ -363,7 +380,7 @@ export default function Navbar() {
               </Button>
 
               {/* Wishlist */}
-              <Link href="/wishlist">
+              {/* <Link href="/wishlist">
                 <Button
                   variant="ghost"
                   size="icon"
@@ -376,7 +393,7 @@ export default function Navbar() {
                     </span>
                   )}
                 </Button>
-              </Link>
+              </Link> */}
 
               {/* User account */}
               {/* <Link href="/account">
@@ -393,9 +410,9 @@ export default function Navbar() {
                   className="relative transition-transform hover:scale-105"
                 >
                   <ShoppingCart className="h-5 w-5" />
-                  {cartCount > 0 && (
+                  {totalItems > 0 && (
                     <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white shadow-lg">
-                      {cartCount}
+                      {totalItems}
                     </span>
                   )}
                 </Button>
