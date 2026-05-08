@@ -1,40 +1,40 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Checkbox } from '@/components/ui/checkbox';
 
 // Assets
-import germany from "@/assets/jersey.jpg";
+import germany from '@/assets/jersey.jpg';
 
 // Bangladesh Districts
 const districts = [
-  "Dhaka",
-  "Chattogram",
-  "Sylhet",
-  "Rajshahi",
-  "Khulna",
-  "Barishal",
-  "Rangpur",
-  "Mymensingh",
-  "Gazipur",
-  "Narayanganj",
-  "Cumilla",
-  "Bogura", // ... bakigulao add kora jabe
+  'Dhaka',
+  'Chattogram',
+  'Sylhet',
+  'Rajshahi',
+  'Khulna',
+  'Barishal',
+  'Rangpur',
+  'Mymensingh',
+  'Gazipur',
+  'Narayanganj',
+  'Cumilla',
+  'Bogura', // ... bakigulao add kora jabe
 ].sort();
 
 export default function CustomerOrderPage() {
-  const [district, setDistrict] = useState("Dhaka");
+  const [district, setDistrict] = useState('Dhaka');
   const [isInsideDhaka, setIsInsideDhaka] = useState(true);
   const [showCustom, setShowCustom] = useState(false);
 
   // Auto-sync Delivery Charge with District
   useEffect(() => {
-    if (district === "Dhaka") {
+    if (district === 'Dhaka') {
       setIsInsideDhaka(true);
     } else {
       setIsInsideDhaka(false);
@@ -98,7 +98,7 @@ export default function CustomerOrderPage() {
                   htmlFor="cust"
                   className="font-black uppercase text-xs cursor-pointer"
                 >
-                  Add Name & Number (+৳100)
+                  Add Name & Number (+৳250)
                 </Label>
               </div>
               {showCustom && (
@@ -174,7 +174,7 @@ export default function CustomerOrderPage() {
               </div>
               <div className="flex justify-between text-slate-500">
                 <span>
-                  Delivery ({isInsideDhaka ? "Inside Dhaka" : "Outside Dhaka"})
+                  Delivery ({isInsideDhaka ? 'Inside Dhaka' : 'Outside Dhaka'})
                 </span>
                 <span className="text-slate-900 dark:text-white">
                   ৳{delivery}

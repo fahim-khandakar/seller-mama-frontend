@@ -26,10 +26,10 @@ export default function CartPage() {
   const dispatch = useAppDispatch();
   const cart = useAppSelector((state) => state.cart.cart);
 
-  const handleUpdateQuantity = (id: string, newQuantity: number) => {
+  const handleUpdateQuantity = (cartKey: string, newQuantity: number) => {
     if (newQuantity < 1) return;
 
-    dispatch(updateQuantity({ id, quantity: newQuantity }));
+    dispatch(updateQuantity({ cartKey, quantity: newQuantity }));
   };
 
   const handleRemove = (id: string) => {
@@ -83,9 +83,15 @@ export default function CartPage() {
                   <h3 className="font-black uppercase text-sm md:text-md tracking-tight">
                     {cart.name}
                   </h3>
-                  {/* <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    Size: XL
-                  </p> */}
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Size: {cart?.size}
+                  </p>
+                  {cart?.customizedName && cart?.customizedNumber && (
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                      Customization: {cart?.customizedName}{' '}
+                      {cart?.customizedNumber}
+                    </p>
+                  )}
                   <p className="text-orange-600 font-black text-lg">
                     ৳{cart?.price}
                   </p>
@@ -94,7 +100,7 @@ export default function CartPage() {
                   <div className="flex items-center gap-3 mt-2">
                     <button
                       onClick={() => {
-                        handleUpdateQuantity(cart.id, cart?.quantity - 1);
+                        handleUpdateQuantity(cart.cartKey, cart?.quantity - 1);
                       }}
                       className="h-8 w-8 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-200 transition-colors"
                     >
@@ -105,7 +111,7 @@ export default function CartPage() {
                     </span>
                     <button
                       onClick={() => {
-                        handleUpdateQuantity(cart.id, cart?.quantity + 1);
+                        handleUpdateQuantity(cart.cartKey, cart?.quantity + 1);
                       }}
                       className="h-8 w-8 rounded-full border border-slate-200 flex items-center justify-center hover:bg-slate-200 transition-colors"
                     >
@@ -115,7 +121,7 @@ export default function CartPage() {
                 </div>
 
                 <button
-                  onClick={() => handleRemove(cart.id)}
+                  onClick={() => handleRemove(cart.cartKey)}
                   className="p-3 text-slate-300 hover:text-red-500 transition-colors"
                 >
                   <Trash2 className="w-5 h-5" />

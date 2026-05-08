@@ -4,24 +4,8 @@ import { ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
 import { IProduct } from '@/types/product.type';
 import Link from 'next/link';
-import { useAppDispatch } from '@/redux/hook';
-import { addToCart } from '@/redux/features/slice/cart/cartSlice';
 
 export default function CustomCard({ product }: { product: IProduct }) {
-  const dispatch = useAppDispatch();
-  const handleAddToCart = (product: IProduct) => {
-    dispatch(
-      addToCart({
-        id: product._id as string,
-        name: product.name,
-        price: product.discountPrice
-          ? product.discountPrice
-          : product.basePrice,
-        image: product?.images?.[0] || '',
-        quantity: 1,
-      }),
-    );
-  };
   return (
     <Card
       key={product._id}
@@ -60,12 +44,11 @@ export default function CustomCard({ product }: { product: IProduct }) {
     md:translate-y-12 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 
     transition-all duration-300 z-30"
         >
-          <Button
-            onClick={() => handleAddToCart(product)}
-            className="w-full bg-white text-slate-900 hover:bg-orange-500 hover:text-white font-bold rounded-xl shadow-xl border-none h-10 md:h-12"
-          >
-            <ShoppingCart className="w-4 h-4 mr-2" /> Add to Cart
-          </Button>
+          <Link href={`/shop/${product?._id}`}>
+            <Button className="w-full bg-white text-slate-900 hover:bg-orange-500 hover:text-white font-bold rounded-xl shadow-xl border-none h-10 md:h-12">
+              <ShoppingCart className="w-4 h-4 mr-2" />
+            </Button>
+          </Link>
         </div>
       </CardContent>
 

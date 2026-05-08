@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -38,8 +38,13 @@ export default function Navbar() {
   // const [wishlistCount] = useState(5);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
- const cart = useAppSelector((state) => state.cart.cart);
- const totalItems = cart.length;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const cart = useAppSelector((state) => state.cart.cart);
+  const totalItems = cart.length;
   console.log('totalItems', totalItems);
   const { data: mainCategories } = useGetAllMainCategoriesQuery({});
 
@@ -410,7 +415,7 @@ export default function Navbar() {
                   className="relative transition-transform hover:scale-105"
                 >
                   <ShoppingCart className="h-5 w-5" />
-                  {totalItems > 0 && (
+                  {mounted && totalItems > 0 && (
                     <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white shadow-lg">
                       {totalItems}
                     </span>

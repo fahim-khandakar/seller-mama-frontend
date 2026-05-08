@@ -8,7 +8,6 @@ import {
   Truck,
   ShieldCheck,
   RotateCcw,
-  Heart,
   Plus,
   Minus,
 } from 'lucide-react';
@@ -21,6 +20,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { useGetSingleProductQuery } from '@/redux/features/dashboard/product';
 import { useParams } from 'next/navigation';
+import { useAppDispatch } from '@/redux/hook';
+import { IProduct } from '@/types/product.type';
+import { addToCart } from '@/redux/features/slice/cart/cartSlice';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
 
 const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
 
@@ -29,9 +34,37 @@ export default function JerseyDetails() {
   const [mainImage, setMainImage] = useState('');
   const [selectedSize, setSelectedSize] = useState('M');
   const [quantity, setQuantity] = useState(1);
-  const { data: singleProduct, isLoading } = useGetSingleProductQuery(
-    slug as string,
-  );
+  const [showCustom, setShowCustom] = useState(false);
+  const [customName, setCustomName] = useState('');
+  const [customNumber, setCustomNumber] = useState('');
+
+  const { data: singleProduct } = useGetSingleProductQuery(slug as string);
+  const dispatch = useAppDispatch();
+  const handleAddToCart = (product: IProduct) => {
+    if (customName || customNumber) {
+      if (!customName || !customNumber) {
+        toast.error('Please provide both name and number for customization');
+        return;
+      }
+    }
+    dispatch(
+      addToCart({
+        id: product._id as string,
+        cartKey: `${product._id}-${selectedSize}-${customName}-${customNumber}`,
+        name: product.name,
+        price:
+          (product.discountPrice ?? product.basePrice) +
+          (customName && customNumber ? 250 : 0),
+        image: product?.images?.[0] || '',
+        quantity: 1,
+        size: selectedSize,
+        customizedName: customName || '',
+        customizedNumber: customNumber || '',
+      }),
+    );
+    toast.success(`${product?.name} Added to cart — ready for checkout`);
+  };
+
   console.log('data', singleProduct);
 
   return (
@@ -160,6 +193,37 @@ export default function JerseyDetails() {
               </RadioGroup>
             </div>
 
+            <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl">
+              <div className="flex items-center gap-3 mb-4">
+                <Checkbox
+                  id="cust"
+                  onCheckedChange={(val) => setShowCustom(val as boolean)}
+                />
+                <Label
+                  htmlFor="cust"
+                  className="font-black uppercase text-xs cursor-pointer"
+                >
+                  Add Name & Number (+৳250)
+                </Label>
+              </div>
+              {showCustom && (
+                <div className="grid grid-cols-2 gap-4 animate-in fade-in duration-300">
+                  <Input
+                    value={customName}
+                    onChange={(e) => setCustomName(e.target.value)}
+                    placeholder="NAME (e.g. MESSI)"
+                    className="bg-white border-none font-black uppercase"
+                  />
+                  <Input
+                    value={customNumber}
+                    onChange={(e) => setCustomNumber(e.target.value)}
+                    placeholder="NUMBER (e.g. 10)"
+                    className="bg-white border-none font-black"
+                  />
+                </div>
+              )}
+            </div>
+
             {/* Quantity & Action */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <div className="flex items-center border-2 border-slate-200 dark:border-slate-800 rounded-2xl h-14 px-2">
@@ -179,16 +243,19 @@ export default function JerseyDetails() {
                   <Plus className="w-4 h-4" />
                 </Button>
               </div>
-              <Button className="flex-1 h-14 bg-orange-600 hover:bg-orange-700 text-white font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-orange-600/20 gap-3">
+              <Button
+                onClick={() => handleAddToCart(singleProduct?.data)}
+                className="flex-1 h-14 bg-orange-600 hover:bg-orange-700 text-white font-black uppercase tracking-widest rounded-2xl shadow-xl shadow-orange-600/20 gap-3"
+              >
                 <ShoppingCart className="w-5 h-5" /> Add to Cart
               </Button>
-              <Button
+              {/* <Button
                 variant="outline"
                 size="icon"
                 className="h-14 w-14 rounded-2xl border-slate-200"
               >
                 <Heart className="w-5 h-5" />
-              </Button>
+              </Button> */}
             </div>
 
             {/* Delivery Trust Badges (Important for you!) */}

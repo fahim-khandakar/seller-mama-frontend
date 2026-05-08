@@ -24,9 +24,13 @@ export interface IProduct {
 }
 
 export interface ICartItem {
+  cartKey: string;
   id: string;
   name: string;
   price: number;
   image: string;
   quantity: number;
+  size?: string;
+  customizedName?: string;
+  customizedNumber?: string;
 }
