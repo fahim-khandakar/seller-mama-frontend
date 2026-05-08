@@ -17,6 +17,7 @@ export const baseApi = createApi({
     'TYPE',
     'MAIN_CATEGORY',
     'CATEGORY',
+    'COUPON',
   ],
   endpoints: () => ({}),
 });
