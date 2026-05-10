@@ -160,7 +160,7 @@ export default function CustomerOrderPage() {
             <div className="space-y-8">
               <div>
                 <h2 className="text-2xl font-black uppercase mb-6 tracking-tight">
-                  Shipping Details
+                  Order Details
                 </h2>
                 <div className="space-y-4">
                   {/* Full Name */}
