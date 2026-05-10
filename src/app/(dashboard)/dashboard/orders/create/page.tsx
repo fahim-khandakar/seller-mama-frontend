@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import {
   Select,
   SelectContent,
@@ -17,35 +18,51 @@ import {
 } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-import { User, Phone, MapPin, Plus, Minus } from 'lucide-react';
+import { Plus, Minus, ReceiptText, User, CreditCard } from 'lucide-react';
+import { districts } from '@/shared/constants';
+import { useGetMeQuery } from '@/redux/features/dashboard/user';
 
 type OrderItem = {
   product: string;
   quantity: number;
   sellPrice: number;
-  stockEntry: string;
-  purchasePrice: number;
+  customizedName?: string;
+  customizedNumber?: string;
 };
 
 type FormData = {
   items: OrderItem[];
   discountAmount: number;
   customerName: string;
-  customerPhone?: string;
-  customerAddress?: string;
+  customerPhone: string;
+  customerAddress: string;
+  customerEmail: string;
+  district: string;
+  paymentMethod: 'BKASH' | 'NAGAD';
+  transactionId: string;
+  soldBy: string; // Tui jeta chaisili
 };
 
 export default function OrderCreate() {
+  const router = useRouter();
+  const [createOrder, { isLoading }] = useCreateOrderMutation();
+  const { data: productsData } = useGetAllProductsQuery({ query: '' });
+  const { data: singleUser } = useGetMeQuery({});
+
   const {
     control,
     handleSubmit,
     register,
     watch,
-    formState: { errors },
+    setValue,
+    formState: {},
   } = useForm<FormData>({
     defaultValues: {
-      items: [],
+      items: [{ product: '', quantity: 1, sellPrice: 0 }],
       discountAmount: 0,
+      district: 'Dhaka',
+      paymentMethod: 'BKASH',
+      soldBy: '',
     },
   });
 
@@ -54,249 +71,366 @@ export default function OrderCreate() {
     name: 'items',
   });
 
-  const [createOrder, { isLoading }] = useCreateOrderMutation();
-  const router = useRouter();
+  const watchedItems = watch('items') || [];
+  const watchedDistrict = watch('district');
+  const discountAmount = watch('discountAmount') || 0;
 
-  const { data: productsData } = useGetAllProductsQuery({ query: '' });
-  console.log('products', productsData);
-  const watchedItems = watch('items');
-  const discountAmount = watch('discountAmount');
+  // ── Logic from Form 1 ──
+  const deliveryCharge = watchedDistrict === 'Dhaka' ? 80 : 140;
 
-  const totalAmount = watchedItems.reduce(
-    (sum, item) => sum + item.sellPrice * item.quantity,
+  const subtotal = watchedItems.reduce(
+    (sum, item) => sum + (item.sellPrice || 0) * (item.quantity || 0),
     0,
   );
-  const finalAmount = totalAmount - discountAmount;
 
-  const addItem = () => {
-    append({
-      product: '',
-      quantity: 1,
-      sellPrice: 0,
-      stockEntry: '',
-      purchasePrice: 0,
-    });
+  const totalBeforeDiscount = subtotal + deliveryCharge;
+  const finalAmount = Math.max(totalBeforeDiscount - discountAmount, 0);
+
+  // Check if any item is customized for advance logic
+  const isCustomized = watchedItems.some(
+    (item) => item.customizedName?.trim() || item.customizedNumber?.trim(),
+  );
+
+  const advanceAmount = isCustomized
+    ? Math.ceil(finalAmount * 0.5)
+    : deliveryCharge;
+
+  const handleProductChange = (value: string, index: number) => {
+    const selectedProduct = productsData?.data?.find(
+      (p: any) => p._id === value,
+    );
+    setValue(`items.${index}.product`, value);
+    setValue(`items.${index}.sellPrice`, selectedProduct?.sellPrice || 0);
   };
-
+  console.log('single', singleUser);
   const onSubmit = async (data: FormData) => {
+    if (!data.items.length || !data.items[0].product) {
+      return toast.error('Please add at least one valid product');
+    }
+
     try {
-      const orderData = {
+      const payload = {
         ...data,
-        totalAmount,
+        customerAddress: `${data.district}, ${data.customerAddress}`,
+        subtotal,
+        deliveryCharge,
+        totalAmount: subtotal, // consistent with your backend schema
         finalAmount,
+        advanceAmount,
+        soldBy: singleUser?.data?._id,
+        items: data.items.map((item) => ({
+          ...item,
+          nameAndNumber:
+            [item.customizedName, item.customizedNumber]
+              .filter(Boolean)
+              .join(' / ') || undefined,
+        })),
       };
-      await createOrder(orderData).unwrap();
+
+      await createOrder(payload).unwrap();
       toast.success('Order created successfully!');
       router.push('/dashboard/orders');
     } catch (error: any) {
+      console.log('erro', error);
       toast.error(error?.data?.message || 'Failed to create order');
     }
   };
 
   return (
-    <div className="shadow-md pt-5  rounded-md ">
-      <Card className="border-none">
-        <CardHeader>
-          <CardTitle className="text-2xl font-black uppercase tracking-tighter text-slate-900 dark:text-white">
-            Create <span className="text-orange-600">Order</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Customer Info */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 ml-1">
-                  <User className="w-3 h-3 text-orange-600" />
-                  <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
+    <div className="p-6 max-w-full mx-auto">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-black uppercase tracking-tighter italic">
+            Create <span className="text-orange-600">New Order</span>
+          </h2>
+          <div className="bg-orange-100 text-orange-700 px-4 py-2 rounded-full font-bold text-sm">
+            Advance Due: ৳{advanceAmount}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Side: Customer & Payment */}
+          <div className="lg:col-span-2 space-y-6">
+            <Card className="border-none shadow-sm bg-slate-50/50">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-black uppercase flex items-center gap-2">
+                  <User className="w-4 h-4 text-orange-600" /> Customer
+                  Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase ml-1">
                     Customer Name
                   </Label>
+                  <Input
+                    {...register('customerName', { required: true })}
+                    placeholder="Full Name"
+                    className="bg-white border-none h-11 rounded-xl"
+                  />
                 </div>
-                <Input
-                  {...register('customerName', {
-                    required: 'Customer name is required',
-                  })}
-                  placeholder="Enter customer name"
-                  className="h-12 px-4 bg-slate-50 dark:bg-slate-900 border-none rounded-xl font-medium placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-orange-600/50"
-                />
-                {errors.customerName && (
-                  <p className="text-red-500 text-sm">
-                    {errors.customerName.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 ml-1">
-                  <Phone className="w-3 h-3 text-orange-600" />
-                  <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
-                    Phone
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase ml-1">
+                    Phone Number
                   </Label>
+                  <Input
+                    {...register('customerPhone', { required: true })}
+                    placeholder="017xxxxxxxx"
+                    className="bg-white border-none h-11 rounded-xl"
+                  />
                 </div>
-                <Input
-                  {...register('customerPhone')}
-                  placeholder="Enter phone number"
-                  className="h-12 px-4 bg-slate-50 dark:bg-slate-900 border-none rounded-xl font-medium placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-orange-600/50"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 ml-1">
-                  <MapPin className="w-3 h-3 text-orange-600" />
-                  <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
-                    Address
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase ml-1">
+                    District
                   </Label>
+                  <Controller
+                    name="district"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger className="bg-white border-none h-11 rounded-xl">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {districts.map((d) => (
+                            <SelectItem key={d} value={d}>
+                              {d}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
                 </div>
-                <Input
-                  {...register('customerAddress')}
-                  placeholder="Enter address"
-                  className="h-12 px-4 bg-slate-50 dark:bg-slate-900 border-none rounded-xl font-medium placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-orange-600/50"
-                />
-              </div>
-            </div>
+                {/* <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase ml-1">
+                    Sold By (Seller Name)
+                  </Label>
+                  <Input
+                    {...register('soldBy', { required: true })}
+                    placeholder="Who sold this?"
+                    className="bg-white border-none h-11 rounded-xl shadow-sm ring-1 ring-orange-100"
+                  />
+                </div> */}
+                <div className="md:col-span-2 space-y-2">
+                  <Label className="text-xs font-bold uppercase ml-1">
+                    Full Address
+                  </Label>
+                  <Input
+                    {...register('customerAddress', { required: true })}
+                    placeholder="Area, Road, House No."
+                    className="bg-white border-none h-11 rounded-xl"
+                  />
+                </div>
+              </CardContent>
+            </Card>
 
-            {/* Order Items */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold">Order Items</h3>
+            {/* Product Selection */}
+            <Card className="border-none shadow-sm bg-slate-50/50">
+              <CardHeader className="flex flex-row items-center justify-between pb-3">
+                <CardTitle className="text-sm font-black uppercase flex items-center gap-2">
+                  <ReceiptText className="w-4 h-4 text-orange-600" /> Items
+                </CardTitle>
                 <Button
                   type="button"
-                  onClick={addItem}
-                  variant="outline"
+                  onClick={() =>
+                    append({ product: '', quantity: 1, sellPrice: 0 })
+                  }
                   size="sm"
+                  className="bg-slate-900 rounded-lg"
                 >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Item
+                  <Plus className="w-4 h-4 mr-1" /> Add Product
                 </Button>
-              </div>
-
-              {fields.map((field, index) => (
-                <Card key={field.id} className="p-4">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
-                        Product
-                      </Label>
-                      <Controller
-                        name={`items.${index}.product`}
-                        control={control}
-                        render={({ field }) => (
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <SelectTrigger className="h-12 bg-slate-50 dark:bg-slate-900 border-none rounded-xl">
-                              <SelectValue placeholder="Select product" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {productsData?.data?.map(
-                                (product: { _id: string; name: string }) => (
-                                  <SelectItem
-                                    key={product._id}
-                                    value={product._id}
-                                  >
-                                    {product.name}
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {fields.map((field, index) => (
+                  <div
+                    key={field.id}
+                    className="p-4 bg-white rounded-2xl shadow-sm space-y-4 border border-slate-100"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                      <div className="md:col-span-5 space-y-2">
+                        <Label className="text-[10px] uppercase font-black text-slate-400">
+                          Product
+                        </Label>
+                        <Controller
+                          name={`items.${index}.product`}
+                          control={control}
+                          render={({ field }) => (
+                            <Select
+                              onValueChange={(val) =>
+                                handleProductChange(val, index)
+                              }
+                              value={field.value}
+                            >
+                              <SelectTrigger className="border-none bg-slate-50 h-10 rounded-lg">
+                                <SelectValue placeholder="Select" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {productsData?.data?.map((p: any) => (
+                                  <SelectItem key={p._id} value={p._id}>
+                                    {p.name}
                                   </SelectItem>
-                                ),
-                              )}
-                            </SelectContent>
-                          </Select>
-                        )}
-                      />
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                      </div>
+                      <div className="md:col-span-2 space-y-2">
+                        <Label className="text-[10px] uppercase font-black text-slate-400">
+                          Qty
+                        </Label>
+                        <Input
+                          type="number"
+                          {...register(`items.${index}.quantity`, {
+                            valueAsNumber: true,
+                          })}
+                          className="border-none bg-slate-50 h-10"
+                        />
+                      </div>
+                      <div className="md:col-span-3 space-y-2">
+                        <Label className="text-[10px] uppercase font-black text-slate-400">
+                          Price
+                        </Label>
+                        <Input
+                          type="number"
+                          {...register(`items.${index}.sellPrice`, {
+                            valueAsNumber: true,
+                          })}
+                          className="border-none bg-slate-50 h-10 font-bold"
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          onClick={() => remove(index)}
+                          className="text-red-500 hover:bg-red-50 w-full h-10 rounded-lg"
+                        >
+                          <Minus className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
-
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
-                        Quantity
-                      </Label>
+                    {/* Customization logic from Form 1 */}
+                    <div className="grid grid-cols-2 gap-3 pt-2 border-t border-dashed">
                       <Input
-                        type="number"
-                        {...register(`items.${index}.quantity`, {
-                          valueAsNumber: true,
-                        })}
-                        placeholder="Qty"
-                        className="h-12 px-4 bg-slate-50 dark:bg-slate-900 border-none rounded-xl font-medium"
+                        {...register(`items.${index}.customizedName`)}
+                        placeholder="Custom Name"
+                        className="h-8 text-xs bg-orange-50/50 border-none italic"
                       />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
-                        Sell Price
-                      </Label>
                       <Input
-                        type="number"
-                        step="0.01"
-                        {...register(`items.${index}.sellPrice`, {
-                          valueAsNumber: true,
-                        })}
-                        placeholder="Price"
-                        className="h-12 px-4 bg-slate-50 dark:bg-slate-900 border-none rounded-xl font-medium"
+                        {...register(`items.${index}.customizedNumber`)}
+                        placeholder="Custom Number"
+                        className="h-8 text-xs bg-orange-50/50 border-none italic"
                       />
-                    </div>
-
-                    <div className="flex gap-2">
-                      <Button
-                        type="button"
-                        onClick={() => remove(index)}
-                        variant="destructive"
-                        size="sm"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </Button>
                     </div>
                   </div>
-                </Card>
-              ))}
-            </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
 
-            {/* Totals */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
-                  Total Amount
-                </Label>
-                <Input
-                  value={`$${totalAmount.toFixed(2)}`}
-                  readOnly
-                  className="h-12 px-4 bg-slate-50 dark:bg-slate-900 border-none rounded-xl font-medium"
+          {/* Right Side: Summary & Payment */}
+          <div className="space-y-6">
+            <Card className="border-none shadow-xl bg-slate-900 text-white rounded-[2rem] overflow-hidden">
+              <CardHeader>
+                <CardTitle className="text-center text-xs uppercase tracking-[0.2em] opacity-60">
+                  Order Summary
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex justify-between text-sm">
+                  <span className="opacity-60">Subtotal</span>
+                  <span className="font-bold">৳{subtotal}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="opacity-60">
+                    Delivery ({watchedDistrict})
+                  </span>
+                  <span className="font-bold">৳{deliveryCharge}</span>
+                </div>
+                <div className="pt-2">
+                  <Label className="text-[10px] uppercase opacity-60 mb-1 block">
+                    Manual Discount
+                  </Label>
+                  <Input
+                    type="number"
+                    {...register('discountAmount', { valueAsNumber: true })}
+                    className="bg-slate-800 border-none h-10 text-white font-bold"
+                  />
+                </div>
+                <Separator className="bg-slate-800" />
+                <div className="flex justify-between items-end pt-2">
+                  <span className="text-xs uppercase font-black text-orange-500">
+                    Final Total
+                  </span>
+                  <span className="text-3xl font-black text-orange-500">
+                    ৳{finalAmount}
+                  </span>
+                </div>
+                <div className="bg-orange-500/10 p-3 rounded-xl border border-orange-500/20 text-center">
+                  <p className="text-[10px] uppercase font-black text-orange-400">
+                    Collect Advance
+                  </p>
+                  <p className="text-xl font-black text-orange-500">
+                    ৳{advanceAmount}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-none shadow-sm bg-slate-50/50">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-black uppercase flex items-center gap-2">
+                  <CreditCard className="w-4 h-4 text-orange-600" /> Payment
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Controller
+                  name="paymentMethod"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="grid grid-cols-2 gap-2">
+                      {['BKASH', 'NAGAD'].map((m) => (
+                        <Button
+                          key={m}
+                          type="button"
+                          variant={field.value === m ? 'default' : 'outline'}
+                          onClick={() => field.onChange(m)}
+                          className={`h-10 rounded-xl font-black text-xs ${field.value === m ? 'bg-orange-600' : 'bg-white border-none'}`}
+                        >
+                          {m}
+                        </Button>
+                      ))}
+                    </div>
+                  )}
                 />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
-                  Discount Amount
-                </Label>
-                <Input
-                  type="number"
-                  step="0.01"
-                  {...register('discountAmount', { valueAsNumber: true })}
-                  placeholder="0.00"
-                  className="h-12 px-4 bg-slate-50 dark:bg-slate-900 border-none rounded-xl font-medium"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">
-                  Final Amount
-                </Label>
-                <Input
-                  value={`$${finalAmount.toFixed(2)}`}
-                  readOnly
-                  className="h-12 px-4 bg-slate-50 dark:bg-slate-900 border-none rounded-xl font-medium  text-green-600"
-                />
-              </div>
-            </div>
-
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="w-full h-14 bg-slate-900 dark:bg-orange-600 hover:bg-orange-700 text-white font-black uppercase tracking-[0.2em] rounded-xl shadow-xl shadow-orange-600/20 transition-all active:scale-95"
-            >
-              {isLoading ? 'Creating...' : 'Create Order'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase opacity-60">
+                    Transaction ID
+                  </Label>
+                  <Input
+                    {...register('transactionId', { required: true })}
+                    className="bg-white border-none h-11 rounded-xl shadow-inner"
+                    placeholder="TRX-XXXXXX"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full h-14 bg-orange-600 hover:bg-orange-700 text-white font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-orange-600/20"
+                >
+                  {isLoading ? 'Creating...' : 'Confirm Order'}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </form>
     </div>
   );
 }

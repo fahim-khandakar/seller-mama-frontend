@@ -11,12 +11,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 
-import { districts } from './config/constants';
 import { useAppSelector } from '@/redux/hook';
 import { ICartItem } from '@/types/product.type';
 import { useApplyCouponMutation } from '@/redux/features/dashboard/coupon';
 import { toast } from 'sonner';
 import { useCreateOrderMutation } from '@/redux/features/dashboard/order';
+import { districts } from '@/shared/constants';
 
 // ── Zod schema ──
 const createOrderValidation = z.object({
@@ -136,11 +136,13 @@ export default function CustomerOrderPage() {
         customerAddress: `${data.district}, ${data.customerAddress}`,
         transactionId: data.transactionId,
         paymentMethod: data.paymentMethod,
+        soldBy: '',
         coupon: coupon || '',
         advanceAmount,
       };
 
       const result = await createOrder(orderPayload).unwrap();
+
       if (result.success) {
         toast.success('Order placed successfully!');
       }
