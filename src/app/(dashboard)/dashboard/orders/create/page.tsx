@@ -162,12 +162,12 @@ export default function OrderCreate() {
               .join(' / ') || undefined,
         })),
       };
-      console.log('payload', data);
+
       await createOrder(payload).unwrap();
       toast.success('Order created successfully!');
       router.push('/dashboard/orders');
     } catch (error: any) {
-      console.log('erro', error);
+
       toast.error(error?.data?.message || 'Failed to create order');
     }
   };

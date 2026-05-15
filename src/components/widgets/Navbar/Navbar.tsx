@@ -45,7 +45,7 @@ export default function Navbar() {
   }, []);
   const cart = useAppSelector((state) => state.cart.cart);
   const totalItems = cart.length;
-  console.log('totalItems', totalItems);
+
   const { data: mainCategories } = useGetAllMainCategoriesQuery({});
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

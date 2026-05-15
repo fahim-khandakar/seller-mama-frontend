@@ -26,7 +26,6 @@ export default function SignInPage() {
   const [login, { isLoading }] = useLoginMutation();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    console.log('data', data);
     const isSuccess = await handleResponse(login(data).unwrap());
 
     if (isSuccess) {

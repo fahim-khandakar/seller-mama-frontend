@@ -65,8 +65,6 @@ export default function JerseyDetails() {
     toast.success(`${product?.name} Added to cart — ready for checkout`);
   };
 
-  console.log('data', singleProduct);
-
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 pt-28 pb-20">
       <div className="container mx-auto px-4">

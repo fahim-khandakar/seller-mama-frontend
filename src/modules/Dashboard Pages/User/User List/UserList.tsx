@@ -29,7 +29,6 @@ const UserList = () => {
     error,
     isFetching,
   } = useGetAllUsersQuery({ query });
-  console.log('users', usersData);
   useEffect(() => {
     if (usersData?.data) {
       setTotalItems(usersData?.meta?.total);

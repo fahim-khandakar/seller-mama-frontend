@@ -6,7 +6,7 @@ import { IProduct } from '@/types/product.type';
 
 export default function TopSellersSection() {
   const { data: productsData } = useGetAllProductsQuery({ query: 'limit=4' });
-  console.log('products', productsData);
+
   return (
     <section className="w-full py-20 bg-white dark:bg-slate-950">
       <div className="container mx-auto px-4">
@@ -29,7 +29,7 @@ export default function TopSellersSection() {
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          {productsData?.data?.map((product:IProduct, index:number) => (
+          {productsData?.data?.map((product: IProduct, index: number) => (
             <CustomCard product={product} key={index} />
           ))}
         </div>

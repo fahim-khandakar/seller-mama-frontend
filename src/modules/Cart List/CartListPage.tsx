@@ -44,7 +44,6 @@ export default function CartPage() {
   const shipping = 0;
   const total = subtotal + shipping;
 
-  console.log('cart', cart);
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 pt-28 pb-20 font-sans">
       <div className="container mx-auto px-4 max-w-5xl">

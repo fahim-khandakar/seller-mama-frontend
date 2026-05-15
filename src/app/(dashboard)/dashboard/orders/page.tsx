@@ -14,11 +14,14 @@ import CommonTable from '@/components/common/Common Table/CommonTable';
 import Pagination from '@/components/common/Pagination/Pagination';
 import { handleResponse } from '@/shared/helpers/handleResponse';
 import { WarningSwal } from '@/shared/helpers/warningSwal';
+import OrderStatusChange from '@/modules/Dashboard Pages/Order/Order Status Change/OrderStatusChange';
 
 const OrderList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [limit, setLimit] = useState(50);
+  const [isOpen, setIsOpen] = useState(false);
+  const [id, setId] = useState('');
   const searchParams = useSearchParams();
 
   const query = constructQuery({
@@ -48,6 +51,12 @@ const OrderList = () => {
     const result = deleteProduct(id);
     handleResponse(result);
   };
+
+  const handleModalOpen = (id: string) => {
+    setIsOpen(true);
+    setId(id);
+  };
+
   if (isError) {
     return <ErrorShow error={error} />;
   }
@@ -66,6 +75,7 @@ const OrderList = () => {
         <div>
           <div>
             <CommonTable
+              modalFunction={(id: string) => handleModalOpen(id)}
               dataLayout={tableLayout}
               headerData={headerForOrder}
               itemData={ordersData?.data}
@@ -86,6 +96,7 @@ const OrderList = () => {
           </div>
         </div>
       </div>
+      <OrderStatusChange isOpen={isOpen} setIsOpen={setIsOpen} id={id} />
     </div>
   );
 };

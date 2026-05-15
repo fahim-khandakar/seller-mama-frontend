@@ -142,10 +142,7 @@ export default function CustomerOrderPage() {
         coupon: coupon || '',
         advanceAmount,
       };
-      console.log('subtotal', subtotal);
-      console.log('total', total);
-      console.log('advanced', advanceAmount);
-      console.log('payload', orderPayload);
+
       const result = await createOrder(orderPayload).unwrap();
 
       if (result.success) {

@@ -15,7 +15,6 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import CustomCard from '@/components/common/Custom Card/CustomCard';
-import { products } from '@/shared/constants';
 import { useGetAllProductsQuery } from '@/redux/features/dashboard/product';
 import { IProduct } from '@/types/product.type';
 import { constructQuery } from '@/shared/helpers/constructQuery';
@@ -49,7 +48,7 @@ export default function ShopByFilterPage() {
     isError,
     error,
   } = useGetAllProductsQuery({ query });
-  console.log('products', productsData);
+
   const { data: mainCategoriesData } = useGetAllMainCategoriesQuery({});
   const { data: categoriesData } = useGetAllCategoriesQuery({});
   const { data: typesData } = useGetAllTypesQuery({});

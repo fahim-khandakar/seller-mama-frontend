@@ -10,7 +10,7 @@ export default function HeroSection() {
   const { data: singleData } = useGetSingleProductQuery(
     '69f24ed24049b0b4e143af58',
   );
-  console.log('singleData', singleData);
+
   return (
     <section className="relative w-full bg-slate-50 overflow-hidden dark:bg-slate-950">
       <div className="container mx-auto px-4 md:px-6 py-16 md:py-24 lg:py-32 flex flex-col-reverse lg:flex-row items-center gap-10">

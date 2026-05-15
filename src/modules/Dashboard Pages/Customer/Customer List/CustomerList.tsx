@@ -29,7 +29,6 @@ const CustomerList = () => {
     error,
     isFetching,
   } = useGetAllCustomersQuery({ query });
-  console.log('customers', customersData);
   useEffect(() => {
     if (customersData?.data) {
       setTotalItems(customersData?.meta?.total);

@@ -4,6 +4,7 @@ export const headerForOrder = [
   'Status',
   'Items',
   'Created Date',
+  'Modal',
   'Delete',
   'Details',
   'Edit',

@@ -28,7 +28,7 @@ export default function OrderDetailsPage() {
 
   if (!order)
     return <div className="text-center p-20 font-bold">Order not found!</div>;
-  console.log('ordre', order);
+
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6">
       {/* Header Section */}

@@ -82,7 +82,7 @@ export default function ProductCreate() {
   const { data: mainCategories } = useGetAllMainCategoriesQuery({});
   const { data: categories } = useGetAllCategoriesQuery({});
   const { data: types } = useGetAllTypesQuery({});
-  console.log('category', categories);
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'description',

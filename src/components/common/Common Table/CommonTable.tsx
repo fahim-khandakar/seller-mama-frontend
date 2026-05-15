@@ -25,7 +25,7 @@ import {
   Eye,
   Edit2,
   Trash2,
-  FileText,
+  Info,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -253,10 +253,10 @@ const CommonTable: FC<CommonTableProps> = ({
                         variant={'ghost'}
                         onClick={(e) => {
                           e.stopPropagation(); // stop row click
-                          modalFunction(item?.id);
+                          modalFunction(item?._id);
                         }}
                       >
-                        <FileText className="h-4 w-4" />
+                        <Info className="h-4 w-4" />
                       </Button>
                     </TableCell>
                   )}
