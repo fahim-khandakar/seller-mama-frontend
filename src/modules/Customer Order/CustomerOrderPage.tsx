@@ -84,7 +84,7 @@ export default function CustomerOrderPage() {
     (total, item) => total + item.price * item.quantity,
     0,
   );
-  const delivery = isInsideDhaka ? 80 : 140;
+  const delivery = isInsideDhaka ? 70 : 130;
   const discountedSubtotal = isHaveDiscount.finalAmount || subtotal;
   const total = discountedSubtotal + delivery;
 
@@ -130,6 +130,8 @@ export default function CustomerOrderPage() {
         totalAmount: subtotal,
         discountAmount: isHaveDiscount.discount,
         finalAmount: total,
+        paidAmount: advanceAmount,
+        deliveryCharge: delivery,
         customerName: data.customerName,
         customerEmail: data.customerEmail,
         customerPhone: data.customerPhone,
@@ -140,7 +142,10 @@ export default function CustomerOrderPage() {
         coupon: coupon || '',
         advanceAmount,
       };
-
+      console.log('subtotal', subtotal);
+      console.log('total', total);
+      console.log('advanced', advanceAmount);
+      console.log('payload', orderPayload);
       const result = await createOrder(orderPayload).unwrap();
 
       if (result.success) {
