@@ -21,6 +21,8 @@ import { useRouter } from 'next/navigation';
 import { Plus, Minus, ReceiptText, User, CreditCard } from 'lucide-react';
 import { districts } from '@/shared/constants';
 import { useGetMeQuery } from '@/redux/features/dashboard/user';
+import { useState } from 'react';
+import { useApplyCouponMutation } from '@/redux/features/dashboard/coupon';
 
 type OrderItem = {
   product: string;
@@ -32,7 +34,6 @@ type OrderItem = {
 
 type FormData = {
   items: OrderItem[];
-  discountAmount: number;
   customerName: string;
   customerPhone: string;
   customerAddress: string;
@@ -45,7 +46,15 @@ type FormData = {
 
 export default function OrderCreate() {
   const router = useRouter();
+  const [isHaveDiscount, setIsHaveDiscount] = useState({
+    discount: 0,
+    finalAmount: 0,
+  });
+  const [coupon, setCoupon] = useState('');
+
   const [createOrder, { isLoading }] = useCreateOrderMutation();
+  const [applyCoupon] = useApplyCouponMutation();
+
   const { data: productsData } = useGetAllProductsQuery({ query: '' });
   const { data: singleUser } = useGetMeQuery({});
 
@@ -58,8 +67,15 @@ export default function OrderCreate() {
     formState: {},
   } = useForm<FormData>({
     defaultValues: {
-      items: [{ product: '', quantity: 1, sellPrice: 0 }],
-      discountAmount: 0,
+      items: [
+        {
+          product: '',
+          quantity: 1,
+          sellPrice: 0,
+          customizedName: '',
+          customizedNumber: '',
+        },
+      ],
       district: 'Dhaka',
       paymentMethod: 'BKASH',
       soldBy: '',
@@ -73,27 +89,27 @@ export default function OrderCreate() {
 
   const watchedItems = watch('items') || [];
   const watchedDistrict = watch('district');
-  const discountAmount = watch('discountAmount') || 0;
 
   // ── Logic from Form 1 ──
-  const deliveryCharge = watchedDistrict === 'Dhaka' ? 80 : 140;
+  const deliveryCharge = watchedDistrict === 'Dhaka' ? 70 : 130;
 
   const subtotal = watchedItems.reduce(
-    (sum, item) => sum + (item.sellPrice || 0) * (item.quantity || 0),
+    (sum, item) =>
+      sum +
+      (item.sellPrice +
+        (item?.customizedName && item?.customizedNumber ? 250 : 0) || 0) *
+        (item.quantity || 0),
     0,
   );
-
-  const totalBeforeDiscount = subtotal + deliveryCharge;
-  const finalAmount = Math.max(totalBeforeDiscount - discountAmount, 0);
+  const discountedSubtotal = isHaveDiscount.finalAmount || subtotal;
+  const total = discountedSubtotal + deliveryCharge;
 
   // Check if any item is customized for advance logic
   const isCustomized = watchedItems.some(
     (item) => item.customizedName?.trim() || item.customizedNumber?.trim(),
   );
 
-  const advanceAmount = isCustomized
-    ? Math.ceil(finalAmount * 0.5)
-    : deliveryCharge;
+  const advanceAmount = isCustomized ? Math.ceil(total * 0.5) : deliveryCharge;
 
   const handleProductChange = (value: string, index: number) => {
     const selectedProduct = productsData?.data?.find(
@@ -102,7 +118,23 @@ export default function OrderCreate() {
     setValue(`items.${index}.product`, value);
     setValue(`items.${index}.sellPrice`, selectedProduct?.sellPrice || 0);
   };
-  console.log('single', singleUser);
+
+  const handleApplyCoupon = async () => {
+    const result = await applyCoupon({
+      code: coupon,
+      orderAmount: subtotal,
+    }).unwrap();
+    if (result.success) {
+      setIsHaveDiscount({
+        discount: result?.data?.discount,
+        finalAmount: result?.data?.finalAmount,
+      });
+      toast.success(result?.message);
+    } else {
+      toast.error(result?.message);
+    }
+  };
+
   const onSubmit = async (data: FormData) => {
     if (!data.items.length || !data.items[0].product) {
       return toast.error('Please add at least one valid product');
@@ -112,21 +144,25 @@ export default function OrderCreate() {
       const payload = {
         ...data,
         customerAddress: `${data.district}, ${data.customerAddress}`,
-        subtotal,
         deliveryCharge,
-        totalAmount: subtotal, // consistent with your backend schema
-        finalAmount,
-        advanceAmount,
+        coupon: coupon,
+        discountAmount: isHaveDiscount.discount,
+        totalAmount: subtotal + deliveryCharge, // consistent with your backend schema
+        finalAmount: total,
+        paidAmount: advanceAmount,
         soldBy: singleUser?.data?._id,
         items: data.items.map((item) => ({
           ...item,
+          sellPrice:
+            item?.sellPrice +
+            (item?.customizedName && item?.customizedNumber ? 250 : 0),
           nameAndNumber:
             [item.customizedName, item.customizedNumber]
               .filter(Boolean)
               .join(' / ') || undefined,
         })),
       };
-
+      console.log('payload', data);
       await createOrder(payload).unwrap();
       toast.success('Order created successfully!');
       router.push('/dashboard/orders');
@@ -176,6 +212,16 @@ export default function OrderCreate() {
                   <Input
                     {...register('customerPhone', { required: true })}
                     placeholder="017xxxxxxxx"
+                    className="bg-white border-none h-11 rounded-xl"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase ml-1">
+                    Email
+                  </Label>
+                  <Input
+                    {...register('customerEmail')}
+                    placeholder="example@gmail.com"
                     className="bg-white border-none h-11 rounded-xl"
                   />
                 </div>
@@ -353,23 +399,37 @@ export default function OrderCreate() {
                   </span>
                   <span className="font-bold">৳{deliveryCharge}</span>
                 </div>
-                <div className="pt-2">
-                  <Label className="text-[10px] uppercase opacity-60 mb-1 block">
-                    Manual Discount
+                {/* Coupon */}
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <Label className="text-[10px] font-black uppercase text-slate-400 ml-1 mb-3 block tracking-widest">
+                    Have a coupon?
                   </Label>
-                  <Input
-                    type="number"
-                    {...register('discountAmount', { valueAsNumber: true })}
-                    className="bg-slate-800 border-none h-10 text-white font-bold"
-                  />
+                  <div className="flex gap-2">
+                    <Input
+                      value={coupon}
+                      onChange={(e) => setCoupon(e.target.value)}
+                      placeholder="Enter Code"
+                      className="bg-slate-800 border-none font-bold h-10 rounded-xl shadow-sm"
+                    />
+                    <Button
+                      type="button"
+                      onClick={handleApplyCoupon}
+                      variant="secondary"
+                      disabled={!coupon}
+                      className="border-2  px-6 h-10 rounded-xl"
+                    >
+                      Apply
+                    </Button>
+                  </div>
                 </div>
+
                 <Separator className="bg-slate-800" />
                 <div className="flex justify-between items-end pt-2">
                   <span className="text-xs uppercase font-black text-orange-500">
                     Final Total
                   </span>
                   <span className="text-3xl font-black text-orange-500">
-                    ৳{finalAmount}
+                    ৳{total}
                   </span>
                 </div>
                 <div className="bg-orange-500/10 p-3 rounded-xl border border-orange-500/20 text-center">
