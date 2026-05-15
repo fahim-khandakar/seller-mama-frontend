@@ -137,7 +137,7 @@ export default function OrderDetailsPage() {
                   Advance Paid
                 </p>
                 <p className="text-2xl font-black text-orange-600">
-                  ৳{order.advanceAmount || 0}
+                  ৳{order.paidAmount || 0}
                 </p>
               </div>
             </CardContent>
@@ -223,9 +223,9 @@ export default function OrderDetailsPage() {
             </CardContent>
           </Card>
 
-          <Button className="w-full h-12 bg-white text-slate-900 hover:bg-slate-100 rounded-xl font-black uppercase tracking-tighter shadow-lg">
+          {/* <Button className="w-full h-12 bg-white text-slate-900 hover:bg-slate-100 rounded-xl font-black uppercase tracking-tighter shadow-lg">
             Print Invoice
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>
