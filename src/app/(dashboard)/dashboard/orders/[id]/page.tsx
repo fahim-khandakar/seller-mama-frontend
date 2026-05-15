@@ -17,7 +17,6 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 
 export default function OrderDetailsPage() {

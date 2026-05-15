@@ -113,7 +113,7 @@ const CommonTable: FC<CommonTableProps> = ({
                   }`}
                   onClick={() => {
                     if (link) {
-                      navigate.push(`${link}/${item?.userId || item?.id}`);
+                      navigate.push(`${link}/${item?.userId || item?._id}`);
                     }
                   }}
                 >

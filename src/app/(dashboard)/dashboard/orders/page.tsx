@@ -4,11 +4,16 @@ import { constructQuery } from '@/shared/helpers/constructQuery';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { headerForOrder, keys, tableLayout } from './config/constants';
-import { useGetAllOrdersQuery } from '@/redux/features/dashboard/order';
+import {
+  useDeleteOrderMutation,
+  useGetAllOrdersQuery,
+} from '@/redux/features/dashboard/order';
 import ErrorShow from '@/components/common/Error Show/ErrorShow';
 import HeaderWithFilter from '@/components/common/Header With Filter/HeaderWithFilter';
 import CommonTable from '@/components/common/Common Table/CommonTable';
 import Pagination from '@/components/common/Pagination/Pagination';
+import { handleResponse } from '@/shared/helpers/handleResponse';
+import { WarningSwal } from '@/shared/helpers/warningSwal';
 
 const OrderList = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,7 +34,8 @@ const OrderList = () => {
     error,
     isFetching,
   } = useGetAllOrdersQuery({ query });
-
+  const [deleteProduct, { isLoading: deleteLoading }] =
+    useDeleteOrderMutation();
   useEffect(() => {
     if (ordersData?.data) {
       setTotalItems(ordersData?.meta?.total);
@@ -38,6 +44,10 @@ const OrderList = () => {
     }
   }, [ordersData]);
 
+  const handleDelete = (id: string) => {
+    const result = deleteProduct(id);
+    handleResponse(result);
+  };
   if (isError) {
     return <ErrorShow error={error} />;
   }
@@ -59,9 +69,11 @@ const OrderList = () => {
               dataLayout={tableLayout}
               headerData={headerForOrder}
               itemData={ordersData?.data}
-              loading={isLoading || isFetching}
+              loading={isLoading || isFetching || deleteLoading}
               editPageLink={'/dashboard/orders'}
               link="/dashboard/orders"
+              deleteFn={(id: string) => WarningSwal(handleDelete, id)}
+              deleteBtn
             />
             <div className="absolute bottom-5  left-5 right-5">
               <Pagination

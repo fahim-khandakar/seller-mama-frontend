@@ -4,6 +4,9 @@ export const headerForOrder = [
   'Status',
   'Items',
   'Created Date',
+  'Delete',
+  'Details',
+  'Edit',
 ];
 export const tableLayout = [
   'item?.customerName',
