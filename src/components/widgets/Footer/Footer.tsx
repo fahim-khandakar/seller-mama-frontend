@@ -1,136 +1,56 @@
-import Image from "next/image";
-import Link from "next/link";
-import logo from "@/assets/Seller_Mama_Logo bg remove.png";
-import {
-  Twitter,
-  Linkedin,
-  Facebook,
-  Instagram,
-  MessageCircle,
-  Music,
-} from "lucide-react";
+import Image from 'next/image';
+import Link from 'next/link';
+import logo from '@/assets/Seller_Mama_Logo bg remove.png';
+import { Facebook, Instagram } from 'lucide-react';
 
 const links = [
   {
-    group: "Product",
+    group: 'Shop',
     items: [
-      {
-        title: "Features",
-        href: "#",
-      },
-      {
-        title: "Solution",
-        href: "#",
-      },
-      {
-        title: "Customers",
-        href: "#",
-      },
-      {
-        title: "Pricing",
-        href: "#",
-      },
-      {
-        title: "Help",
-        href: "#",
-      },
-      {
-        title: "About",
-        href: "#",
-      },
+      { title: 'All Products', href: '/shop' },
+      { title: 'New Arrivals', href: '/shop' },
+      { title: 'Best Sellers', href: '/shop' },
+      { title: 'Offers', href: '/shop' },
     ],
   },
   {
-    group: "Solution",
+    group: 'Company',
     items: [
-      {
-        title: "Startup",
-        href: "#",
-      },
-      {
-        title: "Freelancers",
-        href: "#",
-      },
-      {
-        title: "Organizations",
-        href: "#",
-      },
-      {
-        title: "Students",
-        href: "#",
-      },
-      {
-        title: "Collaboration",
-        href: "#",
-      },
-      {
-        title: "Design",
-        href: "#",
-      },
-      {
-        title: "Management",
-        href: "#",
-      },
+      { title: 'About Us', href: '/about' },
+      { title: 'Contact', href: '/contact' },
     ],
   },
   {
-    group: "Company",
+    group: 'Support',
     items: [
-      {
-        title: "About",
-        href: "#",
-      },
-      {
-        title: "Careers",
-        href: "#",
-      },
-      {
-        title: "Blog",
-        href: "#",
-      },
-      {
-        title: "Press",
-        href: "#",
-      },
-      {
-        title: "Contact",
-        href: "#",
-      },
-      {
-        title: "Help",
-        href: "#",
-      },
+      { title: 'Help Center', href: '/contact' },
+      { title: 'Shipping Info', href: '/about' },
+      { title: 'Returns Policy', href: '/about' },
     ],
   },
   {
-    group: "Legal",
+    group: 'Legal',
     items: [
-      {
-        title: "Licence",
-        href: "#",
-      },
-      {
-        title: "Privacy",
-        href: "#",
-      },
-      {
-        title: "Cookies",
-        href: "#",
-      },
-      {
-        title: "Security",
-        href: "#",
-      },
+      { title: 'Privacy Policy', href: '#' },
+      { title: 'Terms & Conditions', href: '#' },
     ],
   },
 ];
 const socialLinks = [
-  { label: "X", href: "#", icon: Twitter }, // X (Twitter)
-  { label: "LinkedIn", href: "#", icon: Linkedin },
-  { label: "Facebook", href: "#", icon: Facebook },
-  { label: "Threads", href: "#", icon: MessageCircle }, // Closest match
-  { label: "Instagram", href: "#", icon: Instagram },
-  { label: "TikTok", href: "#", icon: Music }, // Closest match
+  // { label: 'X', href: '#', icon: Twitter }, // X (Twitter)
+  // { label: 'LinkedIn', href: '#', icon: Linkedin },
+  {
+    label: 'Facebook',
+    href: 'https://www.facebook.com/sellermamaclothing',
+    icon: Facebook,
+  },
+  // { label: 'Threads', href: '#', icon: MessageCircle }, // Closest match
+  {
+    label: 'Instagram',
+    href: 'https://www.instagram.com/sellermamaclothing',
+    icon: Instagram,
+  },
+  // { label: 'TikTok', href: '#', icon: Music }, // Closest match
 ];
 
 export default function Footer() {

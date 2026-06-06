@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ShoppingBag } from 'lucide-react';
-import jersey from '@/assets/jersey.jpg';
+import jersey from '@/assets/argentina.jpg';
 import { useGetSingleProductQuery } from '@/redux/features/dashboard/product';
 
 export default function HeroSection() {

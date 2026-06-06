@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Menu, Search, ShoppingCart, Sparkles, X } from 'lucide-react';
+import { Menu, Search, ShoppingCart, X } from 'lucide-react';
 import Image from 'next/image';
 import { useGetAllMainCategoriesQuery } from '@/redux/features/dashboard/mainCategory';
 import { IMainCategory } from '@/types/mainCategory.type';
@@ -81,9 +81,10 @@ export default function Navbar() {
       {/* announcement  */}
       <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-4 py-2 text-center text-sm text-white">
         <div className="flex items-center justify-center gap-2">
-          <Sparkles className="h-4 w-4" />
+          {/* <Sparkles className="h-4 w-4" /> */}
           <span className="font-medium">
-            Player Edition Orders Include FREE Name & Number Customization
+            🚀 Beta Version: Found a bug or issue? Please let us know through
+            our facebook page.
           </span>
         </div>
       </div>

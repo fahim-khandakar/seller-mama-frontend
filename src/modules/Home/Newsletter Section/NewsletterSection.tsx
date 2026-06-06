@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Mail, SendHorizontal } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Mail, SendHorizontal } from 'lucide-react';
 
 export default function NewsletterSection() {
   return (
@@ -24,7 +24,7 @@ export default function NewsletterSection() {
             {/* Content */}
             <div className="space-y-2">
               <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight uppercase">
-                Join the{" "}
+                Join the{' '}
                 <span className="text-orange-500 dark:text-slate-900">
                   Squad
                 </span>
@@ -47,13 +47,19 @@ export default function NewsletterSection() {
                   className="h-14 w-full rounded-2xl border-none bg-white/10 dark:bg-orange-700/50 text-white placeholder:text-slate-400 dark:placeholder:text-orange-200 focus-visible:ring-2 focus-visible:ring-orange-500 outline-none pl-6 text-md"
                 />
               </div>
-              <Button
-                size="lg"
-                className="h-14 w-full sm:w-auto px-8 rounded-2xl bg-orange-500 dark:bg-white text-white dark:text-orange-600 font-bold text-md hover:bg-orange-600 dark:hover:bg-slate-100 transition-all flex items-center gap-2 group shadow-xl"
+              <div
+                className="cursor-not-allowed"
+                title="Currently in development, will be available soon!"
               >
-                Subscribe Now
-                <SendHorizontal className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
+                <Button
+                  disabled
+                  size="lg"
+                  className="h-14 w-full sm:w-auto px-8 rounded-2xl bg-orange-500 dark:bg-white text-white dark:text-orange-600 font-bold text-md hover:bg-orange-600 dark:hover:bg-slate-100 transition-all flex items-center gap-2 group shadow-xl"
+                >
+                  Subscribe Now
+                  <SendHorizontal className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </div>
             </form>
 
             <p className="text-xs text-slate-500 dark:text-orange-100/60 pt-2">

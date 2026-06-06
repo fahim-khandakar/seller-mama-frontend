@@ -1,31 +1,32 @@
-"use client";
+'use client';
 
-import { Truck, ShieldCheck, RefreshCw, Trophy } from "lucide-react";
+import { Truck, ShieldCheck, RefreshCw, Trophy } from 'lucide-react';
+import Link from 'next/link';
 
 const features = [
   {
     icon: <Trophy className="w-8 h-8" />,
-    title: "Premium Quality",
+    title: 'Premium Quality',
     description:
-      "High-grade authentic fabrics and master copy precision. Feel the match-day comfort.",
+      'High-grade authentic fabrics and master copy precision. Feel the match-day comfort.',
   },
   {
     icon: <Truck className="w-8 h-8" />,
-    title: "Fastest Delivery",
+    title: 'Fastest Delivery',
     description:
-      "Get your kit within 24-48 hours inside Dhaka. Reliable nationwide shipping.",
+      'Get your kit within 24-48 hours inside Dhaka. Reliable nationwide shipping.',
   },
   {
     icon: <ShieldCheck className="w-8 h-8" />,
-    title: "Check Before Pay",
+    title: 'Check Before Pay',
     description:
-      "You can check the jersey quality and size while the delivery man is present.",
+      'You can check the jersey quality and size while the delivery man is present.',
   },
   {
     icon: <RefreshCw className="w-8 h-8" />,
-    title: "Instant Return",
+    title: 'Instant Return',
     description:
-      "Not satisfied? Hand it back to the delivery man instantly. No questions asked.",
+      'Not satisfied? Hand it back to the delivery man instantly. No questions asked.',
   },
 ];
 
@@ -70,16 +71,18 @@ export default function WhyChooseUsSection() {
               READY TO JOIN THE SQUAD?
             </h4>
             <p className="text-orange-50/90 font-medium mt-2">
-              Use code{" "}
+              Use code{' '}
               <span className="bg-white/20 px-3 py-1 rounded-lg border border-white/40 font-bold text-white">
-                JERSEY10
-              </span>{" "}
+                MAMA10
+              </span>{' '}
               for 10% off your first order!
             </p>
           </div>
-          <button className="whitespace-nowrap px-10 py-5 bg-white text-orange-600 font-black uppercase tracking-wider rounded-2xl hover:bg-slate-100 transition-all transform hover:-translate-y-1 shadow-2xl">
-            Shop Collection
-          </button>
+          <Link href="/shop">
+            <button className="whitespace-nowrap px-10 py-5 bg-white text-orange-600 font-black uppercase tracking-wider rounded-2xl hover:bg-slate-100 transition-all transform hover:-translate-y-1 shadow-2xl">
+              Shop Collection
+            </button>
+          </Link>
         </div>
       </div>
     </section>

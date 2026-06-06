@@ -42,7 +42,7 @@ const ProductList = () => {
     const result = deleteProduct(id);
     handleResponse(result);
   };
-  console.log('Products Data:', productsData);
+
   useEffect(() => {
     if (productsData?.data) {
       setTotalItems(productsData?.meta?.total);

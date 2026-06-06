@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Mail, Phone, MapPin, Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function ContactPage() {
   return (
@@ -31,7 +31,7 @@ export default function ContactPage() {
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
                     Phone / WhatsApp
                   </p>
-                  <p className="text-lg font-bold">+880 1XXX-XXXXXX</p>
+                  <p className="text-lg font-bold">+880 1633030788</p>
                 </div>
               </div>
 
@@ -43,7 +43,7 @@ export default function ContactPage() {
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
                     Email Support
                   </p>
-                  <p className="text-lg font-bold">support@jerseysquad.com</p>
+                  <p className="text-lg font-bold">sellermamabd@gmail.com</p>
                 </div>
               </div>
 
@@ -53,10 +53,10 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                    Showroom Address
+                    Outlet Address
                   </p>
                   <p className="text-lg font-bold">
-                    Bashundhara City, Level 4, Dhaka
+                    Outlet Coming Soon — We are currently an online-only shop.
                   </p>
                 </div>
               </div>
@@ -93,9 +93,17 @@ export default function ContactPage() {
                   className="min-h-[150px] rounded-xl border-slate-200"
                 />
               </div>
-              <Button className="w-full h-14 bg-orange-500 hover:bg-orange-600 text-white font-black uppercase tracking-widest rounded-xl shadow-lg shadow-orange-500/30 gap-2 text-md transition-all">
-                Send Message <Send className="w-5 h-5" />
-              </Button>
+              <div
+                className="cursor-not-allowed"
+                title="Currently in development, will be available soon!"
+              >
+                <Button
+                  disabled
+                  className="w-full h-14  bg-orange-500 hover:bg-orange-600 text-white font-black uppercase tracking-widest rounded-xl shadow-lg shadow-orange-500/30 gap-2 text-md transition-all"
+                >
+                  Send Message <Send className="w-5 h-5" />
+                </Button>
+              </div>
             </form>
           </div>
         </div>
