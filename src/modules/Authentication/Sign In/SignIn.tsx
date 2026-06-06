@@ -99,14 +99,14 @@ export default function SignInPage() {
             )}
           </div>
 
-          <div>
+          {/* <div>
             <Link
               href="/forgot-password"
               className="text-[9px] font-black uppercase text-orange-600 hover:underline"
             >
               Forgot?
             </Link>
-          </div>
+          </div> */}
 
           <ShadButton
             type="submit"
