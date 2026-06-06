@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { TableStatusProps } from './config/types';
 import { useRouter, useSearchParams } from 'next/navigation';

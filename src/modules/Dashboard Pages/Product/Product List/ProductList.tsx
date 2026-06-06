@@ -3,15 +3,19 @@
 import { constructQuery } from '@/shared/helpers/constructQuery';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { headerForCustomer, keys, tableLayout } from './config/constants';
-import { useGetAllCustomersQuery } from '@/redux/features/dashboard/user';
+import {
+  useDeleteProductMutation,
+  useGetAllProductsQuery,
+} from '@/redux/features/dashboard/product';
 import ErrorShow from '@/components/common/Error Show/ErrorShow';
 import HeaderWithFilter from '@/components/common/Header With Filter/HeaderWithFilter';
 import CommonTable from '@/components/common/Common Table/CommonTable';
 import Pagination from '@/components/common/Pagination/Pagination';
-import LoadingPage from '@/components/common/Loading Page/LoadingPage';
+import { headerForProduct, keys, tableLayout } from './config/constants';
+import { handleResponse } from '@/shared/helpers/handleResponse';
+import { WarningSwal } from '@/shared/helpers/warningSwal';
 
-const CustomerList = () => {
+const ProductList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [limit, setLimit] = useState(50);
@@ -24,48 +28,53 @@ const CustomerList = () => {
     limit,
   });
   const {
-    data: customersData,
+    data: productsData,
     isLoading,
     isError,
     error,
     isFetching,
-  } = useGetAllCustomersQuery({ query });
+  } = useGetAllProductsQuery({ query });
+
+  const [deleteProduct, { isLoading: deleteLoading }] =
+    useDeleteProductMutation();
+
+  const handleDelete = (id: string) => {
+    const result = deleteProduct(id);
+    handleResponse(result);
+  };
+
   useEffect(() => {
-    if (customersData?.data) {
-      setTotalItems(customersData?.meta?.total);
-      setLimit(customersData?.meta?.limit);
-      setCurrentPage(customersData?.meta?.page);
+    if (productsData?.data) {
+      setTotalItems(productsData?.meta?.total);
+      setLimit(productsData?.meta?.limit);
+      setCurrentPage(productsData?.meta?.page);
     }
-  }, [customersData]);
+  }, [productsData]);
 
   if (isError) {
     return <ErrorShow error={error} />;
-  }
-
-  if (isLoading) {
-    return <LoadingPage fullPage />;
   }
   return (
     <div>
       <div className="shadow-md pt-5 px-5 rounded-md relative">
         <div>
           <HeaderWithFilter
-            name="Customer List"
-            link={'customers/create'}
-            btnName="Create Customer"
+            name="Product List"
+            link={'products/create'}
+            btnName="Create Product"
             isFilter={false}
-            status="role"
+            status="category"
           />
         </div>
         <div>
           <div>
             <CommonTable
               dataLayout={tableLayout}
-              headerData={headerForCustomer}
-              itemData={customersData?.data}
-              loading={isLoading || isFetching}
-              //   editPageLink={'/customers/customer-edit'}
-              //   link="/customers/customer-details"
+              headerData={headerForProduct}
+              itemData={productsData?.data}
+              loading={isLoading || isFetching || deleteLoading}
+              deleteFn={(id: string) => WarningSwal(handleDelete, id)}
+              deleteBtn
             />
             <div className="absolute bottom-5  left-5 right-5">
               <Pagination
@@ -82,4 +91,4 @@ const CustomerList = () => {
   );
 };
 
-export default CustomerList;
+export default ProductList;

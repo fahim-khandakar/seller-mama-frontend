@@ -20,7 +20,7 @@ import Image from 'next/image';
 import { useGetAllMainCategoriesQuery } from '@/redux/features/dashboard/mainCategory';
 import { IMainCategory } from '@/types/mainCategory.type';
 import { ICategory } from '@/types/category.type';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { DialogTitle } from '@/components/ui/dialog';
 import { useAppSelector } from '@/redux/hook';
 
@@ -32,7 +32,7 @@ const titleCategories = {
 
 export default function Navbar() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const searchParams = usePathname();
   const [value, setValue] = useState('');
 
   // const [wishlistCount] = useState(5);

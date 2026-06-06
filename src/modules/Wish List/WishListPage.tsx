@@ -51,7 +51,6 @@ export default function WishlistPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 pt-28 pb-20">
       <div className="container mx-auto px-4 max-w-5xl">
-        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
           <div>
             <div className="flex items-center gap-2 text-orange-600 mb-2">
