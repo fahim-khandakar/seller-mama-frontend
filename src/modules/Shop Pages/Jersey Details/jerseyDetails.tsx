@@ -19,7 +19,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { useGetSingleProductQuery } from '@/redux/features/dashboard/product';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/redux/hook';
 import { IProduct } from '@/types/product.type';
 import { addToCart } from '@/redux/features/slice/cart/cartSlice';
@@ -37,6 +37,8 @@ export default function JerseyDetails() {
   const [showCustom, setShowCustom] = useState(false);
   const [customName, setCustomName] = useState('');
   const [customNumber, setCustomNumber] = useState('');
+
+  const router = useRouter();
 
   const { data: singleProduct } = useGetSingleProductQuery(slug as string);
   const dispatch = useAppDispatch();
@@ -63,6 +65,7 @@ export default function JerseyDetails() {
       }),
     );
     toast.success(`${product?.name} Added to cart — ready for checkout`);
+    router.push('/cart');
   };
 
   return (
