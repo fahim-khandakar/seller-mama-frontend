@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
 // Assets
-import germany from '@/assets/jersey.jpg';
+import germany from '@/assets/argentina.jpg';
 import argentina from '@/assets/argentina.jpg';
 import CustomCard from '@/components/common/Custom Card/CustomCard';
 import { useGetAllProductsQuery } from '@/redux/features/dashboard/product';
