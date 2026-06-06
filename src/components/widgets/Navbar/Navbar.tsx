@@ -78,7 +78,6 @@ export default function Navbar() {
 
   return (
     <>
-      {/* announcement  */}
       <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-4 py-2 text-center text-sm text-white">
         <div className="flex items-center justify-center gap-2">
           {/* <Sparkles className="h-4 w-4" /> */}
