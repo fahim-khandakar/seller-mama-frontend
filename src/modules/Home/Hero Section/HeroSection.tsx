@@ -105,7 +105,7 @@ export default function HeroSection() {
               </p>
               <p className="text-lg font-extrabold text-slate-900 dark:text-white">
                 {singleData?.data?.name ||
-                  'Germany 2026 World Cup Player Edition'}
+                  'Argentina 2026 World Cup Player Edition'}
               </p>
             </div>
           </div>
