@@ -11,12 +11,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 
-import { useAppSelector } from '@/redux/hook';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { ICartItem } from '@/types/product.type';
 import { useApplyCouponMutation } from '@/redux/features/dashboard/coupon';
 import { toast } from 'sonner';
 import { useCreateOrderMutation } from '@/redux/features/dashboard/order';
 import { districts } from '@/shared/constants';
+import { clearCart } from '@/redux/features/slice/cart/cartSlice';
+import { useRouter } from 'next/navigation';
 
 // ── Zod schema ──
 const createOrderValidation = z.object({
@@ -32,12 +34,15 @@ const createOrderValidation = z.object({
 type OrderFormData = z.infer<typeof createOrderValidation>;
 
 const paymentMethods = [
-  { value: 'BKASH', label: 'bKash', number: '01581039359' },
-  { value: 'NAGAD', label: 'Nagad', number: '01581039359' },
+  { value: 'BKASH', label: 'bKash', number: '01533634831' },
+  { value: 'NAGAD', label: 'Nagad', number: '01533634831' },
 ] as const;
 
 export default function CustomerOrderPage() {
   const cart = useAppSelector((state) => state.cart.cart);
+  const dispatch = useAppDispatch();
+  const navigator = useRouter();
+
   const [isInsideDhaka, setIsInsideDhaka] = useState(true);
   const [coupon, setCoupon] = useState('');
   const [isHaveDiscount, setIsHaveDiscount] = useState({
@@ -147,6 +152,10 @@ export default function CustomerOrderPage() {
 
       if (result.success) {
         toast.success('Order placed successfully!');
+        console.log('order', cart);
+        dispatch(clearCart());
+
+        navigator.push('/shop');
       }
     } catch {
       toast.error('Failed to place order. Please try again.');
