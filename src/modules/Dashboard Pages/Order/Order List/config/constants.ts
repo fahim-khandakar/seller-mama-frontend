@@ -4,10 +4,10 @@ export const headerForOrder = [
   'Status',
   'Items',
   'Created Date',
-  'Modal',
   'Delete',
   'Details',
   'Edit',
+  'Modal',
 ];
 export const tableLayout = [
   'item?.customerName',

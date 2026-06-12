@@ -47,9 +47,10 @@ const OrderList = () => {
     }
   }, [ordersData]);
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     const result = deleteProduct(id);
-    handleResponse(result);
+
+    await handleResponse(result);
   };
 
   const handleModalOpen = (id: string) => {

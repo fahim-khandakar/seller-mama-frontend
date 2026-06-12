@@ -7,9 +7,13 @@ export const handleResponse = async <T>(
   try {
     const res: any = await promise;
 
-    const message = res?.message || 'Success';
-
-    toast.success(message);
+    const message = res?.data?.message || 'Success';
+    console.log('result', res);
+    if (res?.error?.error?.data?.success || res?.data?.success) {
+      toast.success(message);
+    } else {
+      toast.error(message);
+    }
 
     return true; // ✅ success হলে true
   } catch (err: any) {
