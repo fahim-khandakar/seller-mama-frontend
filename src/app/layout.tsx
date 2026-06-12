@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import ReduxProvider from '@/redux/reduxProvider';
 import './globals.css';
 import { Toaster } from 'sonner';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -34,6 +35,9 @@ export default function RootLayout({
           <Toaster position="top-center" />
           {children}
         </ReduxProvider>
+        <GoogleAnalytics
+          gaId={process.env.NEXT_PUBLIC_MEASUREMENT_ID as string}
+        />
       </body>
     </html>
   );
