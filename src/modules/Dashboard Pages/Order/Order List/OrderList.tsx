@@ -81,7 +81,7 @@ const OrderList = () => {
               headerData={headerForOrder}
               itemData={ordersData?.data}
               loading={isLoading || isFetching || deleteLoading}
-              editPageLink={'/dashboard/orders'}
+              editPageLink={'/dashboard/orders/edit'}
               link="/dashboard/orders"
               deleteFn={(id: string) => WarningSwal(handleDelete, id)}
               deleteBtn

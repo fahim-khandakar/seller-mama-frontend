@@ -2,7 +2,11 @@
 'use client';
 
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
-import { useCreateOrderMutation } from '@/redux/features/dashboard/order';
+import {
+  useCreateOrderMutation,
+  useGetSingleOrderQuery,
+  useUpdateOrderMutation,
+} from '@/redux/features/dashboard/order';
 import { useGetAllProductsQuery } from '@/redux/features/dashboard/product';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,11 +21,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Plus, Minus, ReceiptText, User, CreditCard } from 'lucide-react';
 import { districts } from '@/shared/constants';
 import { useGetMeQuery } from '@/redux/features/dashboard/user';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useApplyCouponMutation } from '@/redux/features/dashboard/coupon';
 
 type OrderItem = {
@@ -44,7 +48,8 @@ type FormData = {
   soldBy: string; // Tui jeta chaisili
 };
 
-export default function OrderCreate() {
+export default function OrderEdit() {
+  const { id } = useParams();
   const router = useRouter();
   const [isHaveDiscount, setIsHaveDiscount] = useState({
     discount: 0,
@@ -52,12 +57,40 @@ export default function OrderCreate() {
   });
   const [coupon, setCoupon] = useState('');
 
-  const [createOrder, { isLoading }] = useCreateOrderMutation();
+  const [updateOrder, { isLoading }] = useUpdateOrderMutation();
+  const { data: singleData } = useGetSingleOrderQuery(id as string, {
+    skip: !id,
+  });
   const [applyCoupon] = useApplyCouponMutation();
 
   const { data: productsData } = useGetAllProductsQuery({ query: '' });
   const { data: singleUser } = useGetMeQuery({});
 
+  useEffect(() => {
+    if (singleData?.data) {
+      const order = singleData.data;
+      setValue('customerName', order.customerName);
+      setValue('customerPhone', order.customerPhone);
+      setValue('customerEmail', order.customerEmail);
+      setValue('customerAddress', order.customerAddress);
+      setValue('district', order.address?.split(',')[0] || 'Dhaka');
+      setValue('paymentMethod', order.paymentMethod);
+      setValue('transactionId', order.transactionId);
+      setValue(
+        'items',
+        order.items.map((item: any) => ({
+          product: item.product?._id || '',
+          quantity: item.quantity,
+          sellPrice: item?.nameAndNumber
+            ? item.sellPrice - 250
+            : item.sellPrice,
+          customizedName: item?.nameAndNumber?.split(' ')[0] || '',
+          customizedNumber: item?.nameAndNumber?.split(' ')[2] || '',
+        })),
+      );
+    }
+  }, [singleData, productsData]);
+  console.log('product', singleData);
   const {
     control,
     handleSubmit,
@@ -162,14 +195,14 @@ export default function OrderCreate() {
             item?.sellPrice +
             (item?.customizedName && item?.customizedNumber ? 250 : 0),
           nameAndNumber:
-            [item.customizedName?.trim(), item.customizedNumber?.trim()]
+            [item.customizedName, item.customizedNumber]
               .filter(Boolean)
               .join(' / ') || undefined,
         })),
       };
 
-      await createOrder(payload).unwrap();
-      toast.success('Order created successfully!');
+      await updateOrder({ orderId: id, data: payload }).unwrap();
+      toast.success('Order updated successfully!');
       router.push('/dashboard/orders');
     } catch (error: any) {
       toast.error(error?.data?.message || 'Failed to create order');
