@@ -12,11 +12,9 @@ export const productApi = baseApi.injectEndpoints({
       invalidatesTags: ['PRODUCT'],
     }),
 
-
-
     // 🔹 Get All Products
     getAllProducts: builder.query({
-      query: ({query}) => ({
+      query: ({ query }) => ({
         url: `/products?${query}`,
         method: 'GET',
       }),
@@ -31,9 +29,6 @@ export const productApi = baseApi.injectEndpoints({
       }),
       providesTags: ['PRODUCT'],
     }),
-
-
-
 
     // 🔹 Update Product
     updateProduct: builder.mutation({

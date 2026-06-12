@@ -75,6 +75,7 @@ const ProductList = () => {
               loading={isLoading || isFetching || deleteLoading}
               deleteFn={(id: string) => WarningSwal(handleDelete, id)}
               deleteBtn
+              editPageLink="/dashboard/products/edit"
             />
             <div className="absolute bottom-5  left-5 right-5">
               <Pagination
