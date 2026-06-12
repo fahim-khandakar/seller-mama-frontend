@@ -152,7 +152,6 @@ export default function CustomerOrderPage() {
 
       if (result.success) {
         toast.success('Order placed successfully!');
-        console.log('order', cart);
         dispatch(clearCart());
 
         navigator.push('/shop');

@@ -27,6 +27,7 @@ import { useGetAllCategoriesQuery } from '@/redux/features/dashboard/category';
 import { ICategory } from '@/types/category.type';
 import { useGetAllTypesQuery } from '@/redux/features/dashboard/type';
 import { IType } from '@/types/type.type';
+import CardSkeleton from '@/components/common/Card Skeleton/CardSkeleton';
 
 export default function ShopByFilterPage() {
   const router = useRouter();
@@ -47,6 +48,7 @@ export default function ShopByFilterPage() {
     data: productsData,
     isError,
     error,
+    isLoading,
   } = useGetAllProductsQuery({ query });
 
   const { data: mainCategoriesData } = useGetAllMainCategoriesQuery({});
@@ -111,7 +113,7 @@ export default function ShopByFilterPage() {
   }
 
   const FilterSidebar = () => (
-    <div className="space-y-8">
+    <div className="space-y-8 pl-5">
       {/* Categories */}
       <div>
         <h3 className="text-sm font-black uppercase tracking-widest mb-4">
@@ -251,7 +253,7 @@ export default function ShopByFilterPage() {
               <SheetContent side="left" className="w-[300px] sm:w-[400px]">
                 <SheetHeader>
                   <SheetTitle className="text-left font-black uppercase tracking-widest">
-                    Filter Kits
+                    Filter
                   </SheetTitle>
                 </SheetHeader>
                 <div className="mt-8">
@@ -259,13 +261,13 @@ export default function ShopByFilterPage() {
                 </div>
               </SheetContent>
             </Sheet>
-
+            {/* 
             <Button
               variant="ghost"
               className="hidden md:flex items-center gap-2 rounded-xl border border-slate-100 dark:border-slate-800"
             >
               Sort By: Featured <ChevronDown className="h-4 w-4" />
-            </Button>
+            </Button> */}
           </div>
         </div>
 
@@ -278,9 +280,13 @@ export default function ShopByFilterPage() {
           {/* Product Grid */}
           <div className="flex-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {productsData?.data?.map((product: IProduct, index: number) => (
-                <CustomCard product={product} key={index} />
-              ))}
+              {isLoading
+                ? [1, 2, 3, 4, 5, 6].map((n) => <CardSkeleton key={n} />)
+                : productsData?.data?.map(
+                    (product: IProduct, index: number) => (
+                      <CustomCard product={product} key={index} />
+                    ),
+                  )}
             </div>
           </div>
         </div>

@@ -90,7 +90,7 @@ export default function OrderEdit() {
       );
     }
   }, [singleData, productsData]);
-  console.log('product', singleData);
+
   const {
     control,
     handleSubmit,

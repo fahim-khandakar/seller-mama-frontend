@@ -8,7 +8,6 @@ export const handleResponse = async <T>(
     const res: any = await promise;
 
     const message = res?.data?.message || 'Success';
-    console.log('result', res);
     if (res?.error?.error?.data?.success || res?.data?.success) {
       toast.success(message);
     } else {
@@ -17,7 +16,6 @@ export const handleResponse = async <T>(
 
     return true; // ✅ success হলে true
   } catch (err: any) {
-    console.log(err);
     const message =
       err?.data?.message || err?.message || 'Something went wrong';
 
