@@ -48,9 +48,9 @@ const OrderList = () => {
   }, [ordersData]);
 
   const handleDelete = async (id: string) => {
-    const result = deleteProduct(id);
+    const result = await deleteProduct(id);
 
-    await handleResponse(result);
+    handleResponse(result);
   };
 
   const handleModalOpen = (id: string) => {

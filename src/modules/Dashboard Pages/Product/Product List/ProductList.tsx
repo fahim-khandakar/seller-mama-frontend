@@ -38,8 +38,8 @@ const ProductList = () => {
   const [deleteProduct, { isLoading: deleteLoading }] =
     useDeleteProductMutation();
 
-  const handleDelete = (id: string) => {
-    const result = deleteProduct(id);
+  const handleDelete = async (id: string) => {
+    const result = await deleteProduct(id);
     handleResponse(result);
   };
 

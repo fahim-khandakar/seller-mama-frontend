@@ -26,7 +26,8 @@ export default function SignInPage() {
   const [login, { isLoading }] = useLoginMutation();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    const isSuccess = await handleResponse(login(data).unwrap());
+    const result = await login(data);
+    const isSuccess = handleResponse(result);
 
     if (isSuccess) {
       router.push('/dashboard');
