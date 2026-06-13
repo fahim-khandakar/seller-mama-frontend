@@ -92,7 +92,7 @@ export default function JerseyDetails() {
             <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden bg-slate-100 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-xl">
               {singleProduct?.data?.images?.[0] && (
                 <Image
-                  src={singleProduct.data.images[0]}
+                  src={mainImage || singleProduct.data.images[0]}
                   alt="Main Product Image"
                   fill
                   className="object-cover transition-all duration-500 ease-in-out"
