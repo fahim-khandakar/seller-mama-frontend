@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import {
   Star,
@@ -46,6 +46,12 @@ export default function JerseyDetails() {
   const { data: singleProduct, isLoading } = useGetSingleProductQuery(
     slug as string,
   );
+
+  useEffect(() => {
+    if (singleProduct?.data) {
+      setMainImage(singleProduct?.data?.images[0]);
+    }
+  }, [singleProduct]);
 
   const dispatch = useAppDispatch();
   const handleAddToCart = (product: IProduct) => {
@@ -291,7 +297,7 @@ export default function JerseyDetails() {
                 <span className="text-[10px] font-bold uppercase leading-tight">
                   Authentic
                   <br />
-                  Master Copy
+                  Imported Jersey
                 </span>
               </div>
               <div className="flex items-center gap-3 p-3 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
