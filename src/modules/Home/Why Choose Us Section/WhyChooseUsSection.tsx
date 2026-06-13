@@ -70,13 +70,13 @@ export default function WhyChooseUsSection() {
             <h4 className="text-2xl md:text-4xl font-black text-white leading-tight">
               READY TO JOIN THE SQUAD?
             </h4>
-            <p className="text-orange-50/90 font-medium mt-2">
+            {/* <p className="text-orange-50/90 font-medium mt-2">
               Use code{' '}
               <span className="bg-white/20 px-3 py-1 rounded-lg border border-white/40 font-bold text-white">
                 MAMA10
               </span>{' '}
               for 10% off your first order!
-            </p>
+            </p> */}
           </div>
           <Link href="/shop">
             <button className="whitespace-nowrap px-10 py-5 bg-white text-orange-600 font-black uppercase tracking-wider rounded-2xl hover:bg-slate-100 transition-all transform hover:-translate-y-1 shadow-2xl">
