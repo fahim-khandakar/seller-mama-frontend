@@ -3,6 +3,7 @@ export const headerForOrder = [
   'Total Amount',
   'Status',
   'Items',
+  'Note',
   'Created Date',
   'Delete',
   'Details',
@@ -14,6 +15,7 @@ export const tableLayout = [
   'item?.finalAmount',
   'item?.status',
   'item?.items?.length',
+  'item?.note',
   'item?.createdAt?.slice(0,10)',
 ];
 

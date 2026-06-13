@@ -14,6 +14,7 @@ import {
   CreditCard,
   Calendar,
   UserCheck,
+  FileText,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -172,6 +173,12 @@ export default function OrderDetailsPage() {
                 <MapPin className="w-4 h-4 text-slate-400 mt-1" />
                 <p className="text-xs font-bold leading-relaxed">
                   {order.customerAddress}
+                </p>
+              </div>
+              <div className="flex items-start gap-3 pt-2">
+                <FileText className="w-4 h-4 text-slate-400 mt-1" />
+                <p className="text-xs font-bold leading-relaxed">
+                  {order?.note || 'N/A'}
                 </p>
               </div>
 

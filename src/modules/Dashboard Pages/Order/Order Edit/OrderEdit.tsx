@@ -45,7 +45,8 @@ type FormData = {
   district: string;
   paymentMethod: 'BKASH' | 'NAGAD';
   transactionId: string;
-  soldBy: string; // Tui jeta chaisili
+  soldBy: string;
+  note?: string;
 };
 
 export default function OrderEdit() {
@@ -76,6 +77,7 @@ export default function OrderEdit() {
       setValue('district', order.address?.split(',')[0] || 'Dhaka');
       setValue('paymentMethod', order.paymentMethod);
       setValue('transactionId', order.transactionId);
+      setValue('note', order?.note);
       setValue(
         'items',
         order.items.map((item: any) => ({
@@ -189,6 +191,7 @@ export default function OrderEdit() {
         finalAmount: total,
         paidAmount: advanceAmount,
         soldBy: singleUser?.data?._id,
+        note: data?.note,
         items: data.items.map((item) => ({
           ...item,
           sellPrice:
@@ -304,6 +307,16 @@ export default function OrderEdit() {
                   </Label>
                   <Input
                     {...register('customerAddress', { required: true })}
+                    placeholder="Area, Road, House No."
+                    className="bg-white border-none h-11 rounded-xl"
+                  />
+                </div>
+                <div className="md:col-span-2 space-y-2">
+                  <Label className="text-xs font-bold uppercase ml-1">
+                    Note
+                  </Label>
+                  <Input
+                    {...register('note')}
                     placeholder="Area, Road, House No."
                     className="bg-white border-none h-11 rounded-xl"
                   />

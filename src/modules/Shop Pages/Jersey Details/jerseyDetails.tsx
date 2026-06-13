@@ -26,6 +26,8 @@ import { addToCart } from '@/redux/features/slice/cart/cartSlice';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import JerseyDetailsPageSkeleton from '@/components/common/Jersey Details Page Skeleton/JerseyDetailsPageSkeleton';
+import Modal from '@/components/common/Modal/Modal';
 
 const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
 
@@ -37,10 +39,14 @@ export default function JerseyDetails() {
   const [showCustom, setShowCustom] = useState(false);
   const [customName, setCustomName] = useState('');
   const [customNumber, setCustomNumber] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
 
   const router = useRouter();
 
-  const { data: singleProduct } = useGetSingleProductQuery(slug as string);
+  const { data: singleProduct, isLoading } = useGetSingleProductQuery(
+    slug as string,
+  );
+
   const dispatch = useAppDispatch();
   const handleAddToCart = (product: IProduct) => {
     if (customName || customNumber) {
@@ -67,6 +73,14 @@ export default function JerseyDetails() {
     toast.success(`${product?.name} Added to cart — ready for checkout`);
     router.push('/cart');
   };
+
+  const handleModalOpen = () => {
+    setIsOpen(!isOpen);
+  };
+
+  if (isLoading) {
+    return <JerseyDetailsPageSkeleton />;
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 pt-28 pb-20">
@@ -167,7 +181,10 @@ export default function JerseyDetails() {
                 <h3 className="font-black uppercase tracking-widest text-sm">
                   Select Size
                 </h3>
-                <button className="text-xs font-bold text-orange-600 underline">
+                <button
+                  onClick={handleModalOpen}
+                  className="text-xs font-bold text-orange-600 underline cursor-pointer"
+                >
                   Size Chart
                 </button>
               </div>
@@ -328,6 +345,32 @@ export default function JerseyDetails() {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        header={`${singleProduct?.data?.category?.name} Size Chart`}
+        description={
+          '⚠️ Check Your Fit: To avoid fitting issues, please check our Size Chart carefully before confirming your order.'
+        }
+      >
+        <div className="p-2">
+          <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+            {singleProduct?.data?.category?.sizeChartImage ? (
+              <Image
+                src={singleProduct?.data?.category?.sizeChartImage}
+                alt={`${singleProduct?.data?.category?.name} Size Guide`}
+                fill
+                className="object-contain p-2"
+                sizes="(max-w-768px) 100vw, 600px"
+              />
+            ) : (
+              <div className="h-full w-full flex items-center justify-center text-slate-400 font-bold text-sm">
+                No Size Chart Available
+              </div>
+            )}
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

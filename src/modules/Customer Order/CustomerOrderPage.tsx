@@ -29,6 +29,7 @@ const createOrderValidation = z.object({
   customerAddress: z.string().min(1, 'Full address is required'),
   paymentMethod: z.enum(['BKASH', 'NAGAD']),
   transactionId: z.string().min(1, 'Transaction ID is required'),
+  note: z.string().optional(),
 });
 
 type OrderFormData = z.infer<typeof createOrderValidation>;
@@ -143,6 +144,7 @@ export default function CustomerOrderPage() {
         customerAddress: `${data.district}, ${data.customerAddress}`,
         transactionId: data.transactionId,
         paymentMethod: data.paymentMethod,
+        note: data.note,
         soldBy: '',
         coupon: coupon || '',
         advanceAmount,
@@ -242,6 +244,13 @@ export default function CustomerOrderPage() {
                         {errors.customerAddress.message}
                       </p>
                     )}
+                  </div>
+                  <div>
+                    <Input
+                      {...register('note')}
+                      placeholder="Any special instructions? (optional)"
+                      className="h-12 rounded-xl bg-slate-50 border-none font-bold"
+                    />
                   </div>
                 </div>
               </div>
