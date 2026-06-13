@@ -28,6 +28,7 @@ import { ICategory } from '@/types/category.type';
 import { useGetAllTypesQuery } from '@/redux/features/dashboard/type';
 import { IType } from '@/types/type.type';
 import CardSkeleton from '@/components/common/Card Skeleton/CardSkeleton';
+import NoProductsFound from '@/components/common/No Product Found/NoProductFound';
 
 export default function ShopByFilterPage() {
   const router = useRouter();
@@ -76,6 +77,12 @@ export default function ShopByFilterPage() {
     }
 
     router.push(`?${params.toString()}`);
+  };
+
+  const handleResetFilter = () => {
+    setPriceRange([500, 2000]);
+    setCurrentPage(1);
+    router.push('?');
   };
 
   const handleCategoryChange = (slug: string) => {
@@ -280,13 +287,17 @@ export default function ShopByFilterPage() {
           {/* Product Grid */}
           <div className="flex-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {isLoading
-                ? [1, 2, 3, 4, 5, 6].map((n) => <CardSkeleton key={n} />)
-                : productsData?.data?.map(
-                    (product: IProduct, index: number) => (
-                      <CustomCard product={product} key={index} />
-                    ),
-                  )}
+              {isLoading ? (
+                [1, 2, 3, 4, 5, 6].map((n) => <CardSkeleton key={n} />)
+              ) : productsData?.data?.length > 0 ? (
+                productsData?.data?.map((product: IProduct, index: number) => (
+                  <CustomCard product={product} key={index} />
+                ))
+              ) : (
+                <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+                  <NoProductsFound onResetFilters={handleResetFilter} />
+                </div>
+              )}
             </div>
           </div>
         </div>
