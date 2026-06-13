@@ -8,7 +8,7 @@ import { useGetSingleProductQuery } from '@/redux/features/dashboard/product';
 
 export default function HeroSection() {
   const { data: singleData } = useGetSingleProductQuery(
-    '69f24ed24049b0b4e143af58',
+    '6a247a25290a5e57428490c4',
   );
 
   return (
@@ -17,7 +17,7 @@ export default function HeroSection() {
         {/* Left Side: Text Content */}
         <div className="flex-1 space-y-6 text-center lg:text-left z-10">
           <div className="inline-block rounded-full bg-orange-600/10 px-4 py-1.5 text-sm text-orange-600 dark:text-orange-400 font-bold mb-2 border border-orange-200 dark:border-orange-900/50">
-            🔥 New Season Arrivals 2026
+            🔥 New Season Arrivals {new Date().getFullYear()}
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
             Wear Your Passion. <br />
@@ -82,19 +82,27 @@ export default function HeroSection() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[450px] md:h-[450px] bg-orange-500/20 dark:bg-orange-600/20 rounded-full blur-[80px] -z-10" />
 
           <div className="relative w-full max-w-md aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl rotate-[-2deg] hover:rotate-0 transition-transform duration-500 border-4 border-white dark:border-slate-800">
-            {/* Make sure to put your jersey image in the public folder */}
-            <Image
-              src={singleData?.data?.images[0] || jersey}
-              alt="Premium Sports Jersey"
-              fill
-              className="object-cover bg-slate-100 dark:bg-slate-900"
-              priority
-            />
+            <Link
+              href={
+                singleData?.data?._id
+                  ? `/shop/${singleData?.data?._id}`
+                  : '/shop'
+              }
+            >
+              {/* Make sure to put your jersey image in the public folder */}
+              <Image
+                src={singleData?.data?.images[0] || jersey}
+                alt="Premium Sports Jersey"
+                fill
+                className="object-cover bg-slate-100 dark:bg-slate-900"
+                priority
+              />
+            </Link>
           </div>
 
           {/* Floating Price Tag/Badge for extra flair */}
           <div
-            className={`absolute ${singleData?.data?.string?.length > 30 ? ' -left-2 md:-left-10' : '-left-2 md:left-32'} -bottom-6 md:bottom-0 md:-left-10 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl flex items-center gap-4 animate-bounce hover:animate-none border border-slate-100 dark:border-slate-700`}
+            className={`absolute ${singleData?.data?.name?.length > 30 ? ' -left-2 md:-left-10' : '-left-2 md:left-32'} -bottom-6 md:bottom-0 md:-left-10 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-xl flex items-center gap-4 animate-bounce hover:animate-none border border-slate-100 dark:border-slate-700`}
           >
             <div className="bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 p-2 rounded-full">
               <span className="text-xl">🔥</span>
