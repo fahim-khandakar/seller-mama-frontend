@@ -64,6 +64,8 @@ export const districts = [
   'Thakurgaon',
 ].sort();
 
+export const sizes = ['S', 'M', 'L', 'XL', 'XXL'];
+
 export const emptyData = 'N/A';
 // Constants
 export const ENUM_STATUS = {

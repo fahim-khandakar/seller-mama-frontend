@@ -19,7 +19,7 @@ import {
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { Plus, Minus, ReceiptText, User, CreditCard } from 'lucide-react';
-import { districts } from '@/shared/constants';
+import { districts, sizes } from '@/shared/constants';
 import { useGetMeQuery } from '@/redux/features/dashboard/user';
 import { useState } from 'react';
 import { useApplyCouponMutation } from '@/redux/features/dashboard/coupon';
@@ -30,6 +30,7 @@ type OrderItem = {
   sellPrice: number;
   customizedName?: string;
   customizedNumber?: string;
+  productSize: string;
 };
 
 type FormData = {
@@ -74,6 +75,7 @@ export default function OrderCreate() {
           sellPrice: 0,
           customizedName: '',
           customizedNumber: '',
+          productSize: 'M',
         },
       ],
       district: 'Dhaka',
@@ -287,7 +289,12 @@ export default function OrderCreate() {
                 <Button
                   type="button"
                   onClick={() =>
-                    append({ product: '', quantity: 1, sellPrice: 0 })
+                    append({
+                      product: '',
+                      quantity: 1,
+                      productSize: 'M',
+                      sellPrice: 0,
+                    })
                   }
                   size="sm"
                   className="bg-slate-900 rounded-lg"
@@ -302,7 +309,7 @@ export default function OrderCreate() {
                     className="p-4 bg-white rounded-2xl shadow-sm space-y-4 border border-slate-100"
                   >
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-                      <div className="md:col-span-5 space-y-2">
+                      <div className="md:col-span-4 space-y-2">
                         <Label className="text-[10px] uppercase font-black text-slate-400">
                           Product
                         </Label>
@@ -342,7 +349,35 @@ export default function OrderCreate() {
                           className="border-none bg-slate-50 h-10"
                         />
                       </div>
-                      <div className="md:col-span-3 space-y-2">
+
+                      <div className="md:col-span-2">
+                        <Label className="text-[10px] uppercase font-black text-slate-400">
+                          Size
+                        </Label>
+                        <Controller
+                          {...register(`items.${index}.productSize`)}
+                          control={control}
+                          render={({ field }) => (
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <SelectTrigger className="border-none bg-slate-50 h-10">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {sizes.map((d) => (
+                                  <SelectItem key={d} value={d}>
+                                    {d}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                      </div>
+
+                      <div className="md:col-span-2 space-y-2">
                         <Label className="text-[10px] uppercase font-black text-slate-400">
                           Price
                         </Label>

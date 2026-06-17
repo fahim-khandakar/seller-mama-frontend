@@ -128,6 +128,7 @@ export default function CustomerOrderPage() {
           product: item.id,
           quantity: item.quantity,
           sellPrice: item.price,
+          productSize: item?.size,
           nameAndNumber:
             [item.customizedName, item.customizedNumber]
               .filter(Boolean)

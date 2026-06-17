@@ -23,7 +23,7 @@ import {
 import { toast } from 'sonner';
 import { useParams, useRouter } from 'next/navigation';
 import { Plus, Minus, ReceiptText, User, CreditCard } from 'lucide-react';
-import { districts } from '@/shared/constants';
+import { districts, sizes } from '@/shared/constants';
 import { useGetMeQuery } from '@/redux/features/dashboard/user';
 import { useEffect, useState } from 'react';
 import { useApplyCouponMutation } from '@/redux/features/dashboard/coupon';
@@ -34,6 +34,7 @@ type OrderItem = {
   sellPrice: number;
   customizedName?: string;
   customizedNumber?: string;
+  productSize?: string;
 };
 
 type FormData = {
@@ -88,6 +89,7 @@ export default function OrderEdit() {
             : item.sellPrice,
           customizedName: item?.nameAndNumber?.split(' ')[0] || '',
           customizedNumber: item?.nameAndNumber?.split(' ')[2] || '',
+          productSize: item?.productSize,
         })),
       );
     }
@@ -109,6 +111,7 @@ export default function OrderEdit() {
           sellPrice: 0,
           customizedName: '',
           customizedNumber: '',
+          productSize: 'M',
         },
       ],
       district: 'Dhaka',
@@ -388,6 +391,34 @@ export default function OrderEdit() {
                           className="border-none bg-slate-50 h-10"
                         />
                       </div>
+
+                      <div className="md:col-span-2">
+                        <Label className="text-[10px] uppercase font-black text-slate-400">
+                          Size
+                        </Label>
+                        <Controller
+                          {...register(`items.${index}.productSize`)}
+                          control={control}
+                          render={({ field }) => (
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <SelectTrigger className="border-none bg-slate-50 h-10">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {sizes.map((d) => (
+                                  <SelectItem key={d} value={d}>
+                                    {d}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
+                      </div>
+
                       <div className="md:col-span-3 space-y-2">
                         <Label className="text-[10px] uppercase font-black text-slate-400">
                           Price

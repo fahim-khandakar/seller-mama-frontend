@@ -221,6 +221,7 @@ export default function JerseyDetails() {
               <div className="flex items-center gap-3 mb-4">
                 <Checkbox
                   id="cust"
+                  disabled
                   onCheckedChange={(val) => setShowCustom(val as boolean)}
                 />
                 <Label
@@ -228,6 +229,10 @@ export default function JerseyDetails() {
                   className="font-black uppercase text-xs cursor-pointer"
                 >
                   Add Name & Number (+৳250)
+                  <span className="italic">
+                    Name & Number customization is temporarily unavailable due
+                    to high order volume.
+                  </span>
                 </Label>
               </div>
               {showCustom && (

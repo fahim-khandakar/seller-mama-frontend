@@ -24,7 +24,6 @@ export default function OrderDetailsPage() {
   const { id } = useParams();
   const { data, isLoading } = useGetSingleOrderQuery(id as string);
   const order = data?.data;
-
   if (isLoading) return <OrderDetailsSkeleton />;
 
   if (!order)
@@ -86,6 +85,9 @@ export default function OrderDetailsPage() {
                     <h4 className="font-black text-sm uppercase">
                       {item.product?.name || 'Product Deleted'}
                     </h4>
+                    <p className="text-xs font-bold text-slate-400">
+                      Size: {item?.productSize}
+                    </p>
                     <p className="text-xs font-bold text-slate-400">
                       Qty: {item.quantity} × ৳{item.sellPrice}
                     </p>
